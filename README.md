@@ -34,3 +34,16 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+Please find today's work updates below :
+Date- 28–08-2025
+
+Task name ::practice on next js
+Completed task::
+-Understand middleware concept
+-created api for login and signup , set token in cookie,
+-Creted token for it , base on authenticated route it redired to dedecated path
+-Protected route using user token decoded detailes and redirect to url directly
+
+On Going task::
+Learning next js
