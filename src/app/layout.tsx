@@ -1,5 +1,6 @@
 import { ToastContainer } from "react-toastify";
 import "./globals.css";
+import { Providers } from "@/store/Providers";
 
 export default function RootLayout({
   children,
@@ -9,8 +10,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {children}
-        <ToastContainer position="top-right" autoClose={3000} />
+        <Providers>
+          {children}
+          <ToastContainer position="top-right" autoClose={3000} />
+        </Providers>
       </body>
     </html>
   );

@@ -6,6 +6,7 @@ export default async function middleware(request: NextRequest) {
   const isPublic = path === "/login" || path === "/signup";
   const token = request.cookies.get("token")?.value;
   let role = null;
+  
   if (token) {
     try {
       const { payload: decoded } = await jose.jwtVerify(
@@ -30,7 +31,7 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.nextUrl));
   }
   const adminRoutes = ["/admin/dashboard"];
-  const userRoutes = ["/admin/dashboard"];
+  const userRoutes = ["/user/dashboard"];
   if (role == "user") {
     if (adminRoutes.includes(path)) {
       return NextResponse.redirect(new URL("/user/dashboard", request.nextUrl));

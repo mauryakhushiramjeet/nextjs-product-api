@@ -1,9 +1,8 @@
-import User from "@/app/lib/models/User";
+import User from "@/lib/models/UserModel";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import { createToken } from "../tokenmanage/creteToken";
-import { use } from "react";
-import { databaseConnection } from "@/app/lib/dbConfig";
+import { createToken } from "../../../lib/tokenmanage/creteToken";
+import { databaseConnection } from "@/lib/dbConfig";
 export async function POST(req: NextRequest) {
   const { email, password } = await req.json();
   try {
@@ -18,7 +17,7 @@ export async function POST(req: NextRequest) {
     if (!user) {
       return NextResponse.json({
         success: false,
-        mesage: "user not exist",
+        message: "user not exist with this email.",
       });
     }
     const validatePassword = await bcrypt.compare(password, user.password);

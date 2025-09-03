@@ -1,0 +1,35 @@
+import { databaseConnection } from "@/lib/dbConfig";
+import Product from "@/lib/models/ProductModel";
+import { NextRequest, NextResponse } from "next/server";
+import { verfyToken } from "@/lib/tokenmanage/verfyToken";
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  // const {id}=await para
+  const { id } = await params;
+  try {
+    await databaseConnection();
+    await verfyToken(req);
+    if (!id) {
+      return NextResponse.json({
+        success: false,
+        message: "Product id is required",
+      });
+    }
+    const product = await Product.findById({ _id: id });
+    if (!product) {
+      return NextResponse.json({
+        success: true,
+        message: "Product is not found",
+      });
+    }
+    return NextResponse.json({
+      success: true,
+      message: "product gated successfully",
+      product,
+    });
+  } catch (error: any) {
+    return NextResponse.json({ success: false, message: error.message });
+  }
+}

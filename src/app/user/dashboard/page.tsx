@@ -1,6 +1,8 @@
-const UserDashboard=()=>{
-    return(
-        <div>user dash page</div>
-    )
-}
-export default UserDashboard
+const UserDashboard = () => {
+  return (
+    <div className="p-5">
+      <div className="border"></div>{" "}
+    </div>
+  );
+};
+export default UserDashboard;

@@ -1,4 +1,3 @@
-import { promises } from "dns";
 import jwt from "jsonwebtoken";
 export const createToken = async (id: string, role: string) => {
   try {

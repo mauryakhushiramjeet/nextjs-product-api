@@ -1,5 +1,5 @@
-import { databaseConnection } from "@/app/lib/dbConfig";
-import User, { signupType } from "@/app/lib/models/User";
+import { databaseConnection } from "@/lib/dbConfig";
+import User, { signupType } from "@/lib/models/UserModel";
 import bcrypt from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -15,7 +15,10 @@ export async function POST(req: NextRequest) {
     }
     const isUserAlready = await User.findOne({ email });
     if (isUserAlready) {
-      return NextResponse.json({ success: false, message: "User already exist" });
+      return NextResponse.json({
+        success: false,
+        message: "User already exist",
+      });
     }
     const hashPassword = await bcrypt.hash(password, 10);
     const userData: signupType = {

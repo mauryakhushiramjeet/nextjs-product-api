@@ -1,4 +1,4 @@
-import mongoose, { model, models, Schema } from "mongoose";
+import mongoose, { models, Schema } from "mongoose";
 export interface signupType extends Document {
   name: string;
   email: string;
