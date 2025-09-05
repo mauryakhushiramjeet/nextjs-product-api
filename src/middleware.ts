@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as jose from "jose";
-
 export default async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const isPublic = path === "/login" || path === "/signup";
   const token = request.cookies.get("token")?.value;
   let role = null;
-  
+
   if (token) {
     try {
       const { payload: decoded } = await jose.jwtVerify(
@@ -48,5 +47,12 @@ export default async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/login", "/signup", "/user/dashboard", "/admin/dashboard"],
+  matcher: [
+    "/",
+    "/login",
+    "/signup",
+    "/signIn",
+    "/user/dashboard",
+    "/admin/dashboard",
+  ],
 };

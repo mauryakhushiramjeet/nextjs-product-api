@@ -10,7 +10,6 @@ export async function GET(
   const { id } = await params;
   try {
     await databaseConnection();
-    await verfyToken(req);
     if (!id) {
       return NextResponse.json({
         success: false,

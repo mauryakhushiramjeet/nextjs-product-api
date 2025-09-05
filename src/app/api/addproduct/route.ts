@@ -11,6 +11,7 @@ export async function POST(req: NextRequest) {
   const image = FormData.get("image") as string;
   const price = FormData.get("price") as string;
   const description = FormData.get("description") as string;
+  const bestSeller=FormData.get("bestSeller") as string
 
   const category = FormData.get("category") as string;
 
@@ -18,7 +19,7 @@ export async function POST(req: NextRequest) {
     await databaseConnection();
     await verfyToken(req);
 
-    if (!image || !price || !category || !name || !description) {
+    if (!image || !price || !category || !name || !description||!bestSeller) {
       return NextResponse.json({
         success: false,
         message: "Please fill all detailes of product",
@@ -30,6 +31,7 @@ export async function POST(req: NextRequest) {
       name,
       price: priceData,
       category,
+      bestSeller,
       description,
     };
     const product = new Product(productData);

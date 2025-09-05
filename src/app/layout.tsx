@@ -1,6 +1,8 @@
 import { ToastContainer } from "react-toastify";
 import "./globals.css";
 import { Providers } from "@/store/Providers";
+import { SessionWrapper } from "@/SessionWrapper";
+import Navbar from "@/componentes/Navbar";
 
 export default function RootLayout({
   children,
@@ -9,12 +11,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <Providers>
-          {children}
-          <ToastContainer position="top-right" autoClose={3000} />
-        </Providers>
-      </body>
+      <SessionWrapper>
+        <body cz-shortcut-listen="true" className=" bg-[#F5F5F5] px-5  w-full">
+          <Providers>
+            <Navbar />
+            {children}
+
+            <ToastContainer position="top-right" autoClose={3000} />
+          </Providers>
+        </body>
+      </SessionWrapper>
     </html>
   );
 }

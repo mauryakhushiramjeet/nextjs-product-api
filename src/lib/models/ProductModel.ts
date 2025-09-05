@@ -1,13 +1,14 @@
 import { models, Schema } from "mongoose";
 import mongoose from "mongoose";
 export interface ProductType {
+  _id:string,
   image: string;
   name: string;
   price: number;
   category: string;
-  // size:string
   description: string;
   available?: boolean;
+  bestSeller: boolean;
 }
 const productSchema = new Schema<ProductType>({
   image: {
@@ -22,16 +23,19 @@ const productSchema = new Schema<ProductType>({
     type: Number,
     required: true,
   },
+  bestSeller: {
+    type: Boolean,
+    required: true,
+  },
   category: {
     type: String,
-    enum: ["cloth", "food", "mekeup","jewellery"],
+    enum: ["cloth", "food", "mekeup", "jewellery"],
   },
   description: {
     type: String,
   },
   available: {
     type: Boolean,
-    default: true,
     required: true,
   },
 });

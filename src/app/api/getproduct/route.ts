@@ -1,12 +1,11 @@
 import { databaseConnection } from "@/lib/dbConfig";
 import Product from "@/lib/models/ProductModel";
-import { verfyToken } from "@/lib/tokenmanage/verfyToken";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req:NextRequest) {
   try {
     await databaseConnection();
-    await verfyToken(req)
+    // await verfyToken(req)
     const product = await Product.find();
     return NextResponse.json({
       success: true,

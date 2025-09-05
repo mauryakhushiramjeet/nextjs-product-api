@@ -1,14 +1,15 @@
+"use client"
 import axios from "axios";
-import { cookies } from "next/headers";
-
+import Cookies from "js-cookie";
 export const axiosInstance = axios.create({
   baseURL: "http://localhost:3000/api",
 });
 axiosInstance.interceptors.request.use(
   async (config) => {
-    const cookieStore = await cookies();
+    // const cookieStore = await cookies();
 
-    const token = cookieStore.get("token")?.value;
+    const token = Cookies.get("token")
+
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }

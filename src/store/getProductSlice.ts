@@ -4,17 +4,25 @@ import {
   createSlice,
 } from "@reduxjs/toolkit";
 
+
 interface ProductType { 
+  _id:string,
   name: string;
   description: string;
   price: number;
   image: string;
   category: string;
+  available:boolean
+  bestSeller:boolean
+}
+export interface ProductResponse {
+  message: string;
+  product: ProductType[];
 }
 interface initialSateShap {
   loading: boolean;
   isError: boolean;
-  data: ProductType[] | null;
+  data: ProductResponse | null;
 }
 const initialState: initialSateShap = {
   loading: false,
@@ -27,7 +35,8 @@ export const getAllProduct = createAsyncThunk(
     try {
       const getProduct = await axiosInstance.get("/getproduct");
       const response = await getProduct.data;
-      return response;
+      console.log(response.product)
+      return response
     } catch (error) {
       console.log(error);
       return rejectWithValue(error);
