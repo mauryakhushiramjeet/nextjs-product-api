@@ -1,6 +1,5 @@
 import { axiosInstance } from "@/axios/axiosInstance";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { stat } from "fs";
 interface ProductType {
   _id: string;
   name: string;
@@ -26,8 +25,9 @@ export const getProductById = createAsyncThunk(
   async (id:string, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(`/productbyid/${id}`);
-      const data = await response.data
+      const data = await response.data.product
       return data;
+
     } catch (error) {
       return rejectWithValue(error);
     }

@@ -3,6 +3,7 @@ import "./globals.css";
 import { Providers } from "@/store/Providers";
 import { SessionWrapper } from "@/SessionWrapper";
 import Navbar from "@/componentes/Navbar";
+// import { ProductContextProvider } from "@/context/ProductContect";
 
 export default function RootLayout({
   children,
@@ -14,10 +15,10 @@ export default function RootLayout({
       <SessionWrapper>
         <body cz-shortcut-listen="true" className=" bg-[#F5F5F5] px-5  w-full">
           <Providers>
-            <Navbar />
-            {children}
+              <Navbar />
+              {children}
 
-            <ToastContainer position="top-right" autoClose={3000} />
+              <ToastContainer position="top-right" autoClose={3000} />
           </Providers>
         </body>
       </SessionWrapper>

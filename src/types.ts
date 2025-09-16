@@ -1,5 +1,3 @@
-import { SetStateAction } from "react";
-
 export interface BestproductType {
   available: boolean;
   bestSeller: boolean;
@@ -11,6 +9,7 @@ export interface BestproductType {
   _id: string;
 }
 export interface ProductContextType {
-  product: BestproductType[]
-  setProducts: React.Dispatch<React.SetStateAction<BestproductType[]>>;
+  contextProduct: BestproductType[];
+  setContextProduct: ()=>void
+
 }

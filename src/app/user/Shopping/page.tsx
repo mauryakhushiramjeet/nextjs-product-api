@@ -5,12 +5,12 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
-const BestProductes = () => {
+
+const ShoppingPage = () => {
   const [allproductes, setAllProductes] = useState<ProductType[]>([]);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const productes = useAppSelector((store) => store.products);
-
 
   useEffect(() => {
     dispatch(getAllProduct());
@@ -24,20 +24,16 @@ const BestProductes = () => {
   console.log(productes);
 
   return (
-    <div className="mt-10">
-      <div className="font-semibold text-3xl flex gap-1 items-center">
-        {" "}
-        <p className="w-16 h-1 rounded-full bg-black"></p>
-        <p className="">Bestseller productes</p>
-      </div>
+    <div className="mt-10 w-full">
+      <p className="text-center font-semibold text-4xl my-3 italic text-[#84927a]">
+        Bestseller productes
+      </p>
       <div className="grid grid-cols-5 gap-5">
         {(allproductes || []).map((product, index) => (
           <div
             key={index}
             onClick={() => router.push(`/user/product/${product._id}`)}
-            className={`${
-              product.bestSeller ? "block" : "hidden"
-            } bg-white rounded-xl p-3 flex flex-col gap-2 cursor-pointer`}
+            className={` bg-white rounded-xl p-3 flex flex-col gap-2 cursor-pointer`}
           >
             <Image
               src="/images/hero.jpg"
@@ -66,4 +62,4 @@ const BestProductes = () => {
   );
 };
 
-export default BestProductes;
+export default ShoppingPage;

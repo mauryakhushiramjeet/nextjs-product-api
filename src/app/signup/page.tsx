@@ -1,6 +1,7 @@
 "use client";
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -10,7 +11,7 @@ const SignupPage = () => {
     email: "",
     password: "",
   });
-
+  const router = useRouter();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -29,7 +30,8 @@ const SignupPage = () => {
       const response = await signupUserDataPost.data;
       console.log(response.message);
       if (response.success) {
-        toast.success(response.message);
+        toast.success(response.message)
+        router.push("/login");
       } else {
         toast.error(response.message);
       }

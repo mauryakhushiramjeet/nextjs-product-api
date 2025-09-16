@@ -10,8 +10,10 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --background-image-hero: url("/images/bgimage.jpg");
   --background-image-hero2: url("/images/productimagesbg.webp");
+  --font-roboto:"Roboto", sans-serif;
+  --font-Open-sans:"Open Sans",sans-serif;
+  --font-Inter:"Inter"
 }
 
 /* @media (prefers-color-scheme: dark) {
