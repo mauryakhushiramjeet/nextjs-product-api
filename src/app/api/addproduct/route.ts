@@ -5,8 +5,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   const FormData = await req.formData();
-  // console.log(FormData())
-  // console.loh()
   const name = FormData.get("name") as string;
   const image = FormData.get("image") as string;
   const price = FormData.get("price") as string;

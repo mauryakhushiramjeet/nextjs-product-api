@@ -1,4 +1,5 @@
-import Image from "next/image";
+"use client"
+ import Image from "next/image";
 import { MdOutlineAddCircleOutline } from "react-icons/md";
 import { AiFillProduct } from "react-icons/ai";
 
@@ -13,10 +14,17 @@ const AdminDashboard = () => {
       icons: <AiFillProduct size={20} />,
     },
   ];
+  const formData =new FormData();
+  const handleAddProduct=async(e:React.FormEvent<HTMLFormElement>)=>{
+    e.preventDefault()
+    try{
 
+    }catch(error){
+      console.log(error)
+    }
+  }
   return (
     <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
       <div className="w-60 bg-[#F7F7F5] shadow-lg flex flex-col p-5">
         <div className="flex flex-col items-center mb-3 w-fit p-2">
           <Image src="/images/pngtree.png" alt="logo" height={50} width={60} />
@@ -36,9 +44,9 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      <div className="flex-1 p-10 bg-white">
+      <div className="flex-1 p-10 bg-white ">
         <h1 className="text-2xl font-bold mb-5">Add Product</h1>
-        <form className=" p-6 rounded-lg shadow-md  flex gap-20 ">
+        <form className=" p-6 rounded-lg shadow-md  flex gap-20 bg-gray-100"onSubmit={handleAddProduct}>
           <div className="flex flex-col space-y-3">
             <div>
               <label className="block mb-1 font-medium text-green-800">
@@ -105,12 +113,18 @@ const AdminDashboard = () => {
             </div>
             <div>
               <select className="border border-green-600 px-3 py-2 outline-none rounded-lg text-sm">
-                <option value="cloth" className="text-gray-500" disabled selected >Choose product category</option>
-
-                <option value="cloth">Cloth</option>
+                <option
+                  value="cloth"
+                  className="text-gray-500"
+                  disabled
+                  selected
+                >
+                  Choose product category
+                </option>
+                <option  value="cloth">Cloth</option>
                 <option value="makeup">Makeup</option>
                 <option value="food">Food</option>
-                <option value="growsarry">growsarry</option>
+                <option value="jewellery">Jewellery</option>
               </select>
             </div>
             <button
