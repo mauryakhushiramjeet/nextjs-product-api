@@ -13,10 +13,14 @@ const initialState: initialStateType = {
 };
 export const addProduct = createAsyncThunk(
   "add/product",
-  async (Product, { rejectWithValue }) => {
+  async (Product:FormData, { rejectWithValue }) => {
     try {
-      const addData = await axiosInstance.post("/addproduct", Product);
-      const response = await addData.data;
+      const addData = await axiosInstance.post("/addproduct", Product,{
+        headers:{
+            "Content-Type":"form-data"
+        }
+      });
+      const response = await addData.data
       console.log("add product data from slice", response);
       return response;
     } catch (error) {

@@ -2,14 +2,18 @@
 import { configureStore } from "@reduxjs/toolkit";
 import allProductReducer from "./getProductSlice";
 import singleProduct from "./getProductByIdSlice";
-import addProduct from "./addProductSlice"
+import addProduct from "./addProductSlice";
+import deleteProductByIdReducer from "./deleteProductByIdSlice";
+import updatedProductReducer from "./updateProductSlice";
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 
 export const store = configureStore({
   reducer: {
     products: allProductReducer,
     Product: singleProduct,
-    addProduct:addProduct
+    addProduct: addProduct,
+    deleteProductId: deleteProductByIdReducer,
+    updatedProduct: updatedProductReducer,
   },
 });
 

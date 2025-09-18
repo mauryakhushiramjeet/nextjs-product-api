@@ -1,4 +1,5 @@
 import { databaseConnection } from "@/lib/dbConfig";
+import { ImageBasestring64 } from "@/lib/ImageBasestring64";
 import Product, { ProductType } from "@/lib/models/ProductModel";
 import { verfyToken } from "@/lib/tokenmanage/verfyToken";
 import { NextRequest, NextResponse } from "next/server";
@@ -6,31 +7,50 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   const FormData = await req.formData();
   const name = FormData.get("name") as string;
-  const image = FormData.get("image") as string;
+  const image = FormData.get("image") as File;
   const price = FormData.get("price") as string;
   const description = FormData.get("description") as string;
-  const bestSeller=FormData.get("bestSeller") as string
-
+  const bestSeller = FormData.get("bestSeller") as string;
+  const available = FormData.get("available") as string;
   const category = FormData.get("category") as string;
 
   try {
     await databaseConnection();
     await verfyToken(req);
 
-    if (!image || !price || !category || !name || !description||!bestSeller) {
+    if (
+      !image ||
+      !price ||
+      !category ||
+      !name ||
+      !description ||
+      !bestSeller ||
+      !available
+    ) {
       return NextResponse.json({
         success: false,
         message: "Please fill all detailes of product",
+        data: {
+          image,
+          name,
+          bestSeller,
+          description,
+          category,
+          price,
+          available,
+        },
       });
     }
+    const basestring64 = await ImageBasestring64(image);
     const priceData = parseInt(price);
     const productData = {
-      image,
+      image:basestring64,
       name,
       price: priceData,
       category,
       bestSeller,
       description,
+      available,
     };
     const product = new Product(productData);
     await product.save();

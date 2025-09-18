@@ -28,20 +28,22 @@ const ShoppingPage = () => {
       <p className="text-center font-semibold text-4xl my-3 italic text-[#84927a]">
         Bestseller productes
       </p>
-      <div className="grid grid-cols-5 gap-5">
+      <div className="grid grid-cols-4 gap-5">
         {(allproductes || []).map((product, index) => (
           <div
             key={index}
             onClick={() => router.push(`/user/product/${product._id}`)}
-            className={` bg-white rounded-xl p-3 flex flex-col gap-2 cursor-pointer`}
+            className={` bg-white rounded-xl p-3 flex flex-col shadow  gap-2 cursor-pointer`}
           >
-            <Image
-              src="/images/hero.jpg"
-              height={200}
-              width={200}
-              className="w-full rounded-xl"
-              alt={product.name || "product image"}
-            />
+            {typeof product.image == "string" && (
+              <Image
+                src={product.image}
+                height={200}
+                width={200}
+                className="rounded-xl h-[200px] w-full object-cover"
+                alt={product.name || "product image"}
+              />
+            )}
             <p className="text-gray-800 text-sm font-medium">{product.name}</p>
             <div className="flex w-full justify-between">
               <p className="text-gray-800 text-sm font-medium">

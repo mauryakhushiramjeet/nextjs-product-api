@@ -6,13 +6,34 @@ import cookie from "js-cookie";
 import { useRouter } from "next/navigation";
 const Navbar = () => {
   const [showProfile, setShowProfile] = useState<boolean>(false);
-  const navbarMenu: string[] = ["Home", "Shopping", "About us", "Contact us"];
+  interface MenuType {
+    menuName: string;
+    route: string;
+  }
+  const navbarMenu: MenuType[] = [
+    {
+      menuName: "Home",
+      route: "/",
+    },
+    {
+      menuName: "Shopping",
+      route: "/user/Shopping",
+    },
+    {
+      menuName: "Contact Us",
+      route: "/user/contactUs",
+    },
+    {
+      menuName: "About Us",
+      route: "/user/aboutUs",
+    },
+  ];
   const router = useRouter();
   const handleLogout = () => {
     localStorage.removeItem("role");
     cookie.remove("token");
     router.push("/login");
-    setShowProfile(false)
+    setShowProfile(false);
   };
   return (
     <div className="py-3 my-5 px-5 flex  justify-between w-full bg-white text-black shadow rounded-md  ">
@@ -23,9 +44,9 @@ const Navbar = () => {
             <div
               className="hover:bg-[#ACBBA2] px-3 py-1 rounded-lg cursor-pointer"
               key={index}
-              onClick={() => router.push(`/${nav}`)}
+              onClick={() => router.push(nav.route)}
             >
-              {nav}
+              {nav.menuName}
             </div>
           ))}
         </div>

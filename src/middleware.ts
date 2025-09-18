@@ -23,17 +23,17 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/admin/dashboard", request.nextUrl));
   }
   if (isPublic && token && role == "user") {
-    return NextResponse.redirect(new URL("/user/dashboard", request.nextUrl));
+    return NextResponse.redirect(new URL("/", request.nextUrl));
   }
 
   if (!isPublic && (!token || !role)) {
     return NextResponse.redirect(new URL("/login", request.nextUrl));
   }
   const adminRoutes = ["/admin/dashboard"];
-  const userRoutes = ["/user/dashboard"];
+  const userRoutes = ["/"];
   if (role == "user") {
     if (adminRoutes.includes(path)) {
-      return NextResponse.redirect(new URL("/user/dashboard", request.nextUrl));
+      return NextResponse.redirect(new URL("/", request.nextUrl));
     }
   } else {
     if (userRoutes.includes(path)) {
@@ -52,7 +52,6 @@ export const config = {
     "/login",
     "/signup",
     "/signIn",
-    "/user/dashboard",
     "/admin/dashboard",
   ],
 };

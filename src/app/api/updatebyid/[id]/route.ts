@@ -1,5 +1,6 @@
 import { databaseConnection } from "@/lib/dbConfig";
-import Product from "@/lib/models/ProductModel";
+import { ImageBasestring64 } from "@/lib/ImageBasestring64";
+import Product, { ProductType } from "@/lib/models/ProductModel";
 import { verfyToken } from "@/lib/tokenmanage/verfyToken";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -9,7 +10,7 @@ export async function PUT(
 ) {
   const { id } = await params;
 
-  const FormData = await req.formData();
+  const formData = await req.formData();
 
   console.log(FormData);
   try {
@@ -26,9 +27,15 @@ export async function PUT(
       });
     }
     const productData: any = {};
-    FormData.forEach((value, key) => {
-      productData[key] = value;
-    });
+    for (const [key, value] of formData.entries()) {
+      if (key == "image" && value instanceof File) {
+        const img = await ImageBasestring64(value);
+        productData[key] = img;
+      } else {
+        productData[key] = value;
+      }
+    }
+    console.log(productData, "product data is");
     const product = await Product.findByIdAndUpdate(
       { _id: id },
       { $set: productData },
@@ -39,7 +46,7 @@ export async function PUT(
       message: "product updated",
       product,
     });
-  } catch (error:any) {
+  } catch (error: any) {
     return NextResponse.json({ success: false, message: error.message });
   }
 }

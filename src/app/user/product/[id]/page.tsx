@@ -62,13 +62,15 @@ const ProductPage = () => {
     <div>
       <div className="grid grid-cols-2 gap-20">
         <div className="">
-          <Image
-            src="/images/bgimage.jpg"
-            alt="product-image"
-            height={700}
-            width={700}
-            className="object-contain"
-          />
+          {typeof productDetailes?.image == "string" && (
+            <Image
+              src={productDetailes.image}
+              alt="product-image"
+              height={700}
+              width={700}
+              className="object-contain h-[300px] "
+            />
+          )}
         </div>
         <div className="flex flex-col gap-2">
           <p className="text-[#1D2939] text-4xl  font-extrabold">
@@ -96,22 +98,24 @@ const ProductPage = () => {
           <p className="">Recommende productes</p>
         </div>
         <div className="">
-          <Swiper slidesPerView={3} spaceBetween={10}>
+          <Swiper slidesPerView={4} spaceBetween={10}>
             {(productRelated || []).map((relatedProduct) => (
               <SwiperSlide key={relatedProduct._id}>
                 <div
-                  className="flex cursor-pointer rounded-xl p-3 flex-col gap-1 bg-gray-200"
+                  className="flex w-[300px] cursor-pointer rounded-xl p-3 flex-col gap-1 bg-gray-200"
                   onClick={() =>
                     router.push(`/user/product/${relatedProduct._id}`)
                   }
                 >
-                  <Image
-                    src="/images/bg2.jpg"
-                    alt="related product"
-                    height={300}
-                    width={500}
-                    className="rounded-xl"
-                  />
+                  {typeof relatedProduct.image == "string" && (
+                    <Image
+                      src={relatedProduct.image}
+                      alt="related product"
+                      height={300}
+                      width={500}
+                      className="rounded-xl h-[300px] w-[300px]"
+                    />
+                  )}
                   <p className="text-gray-800 text-sm font-medium">
                     {relatedProduct.name}
                   </p>
