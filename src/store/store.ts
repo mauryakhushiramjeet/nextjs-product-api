@@ -5,6 +5,8 @@ import singleProduct from "./getProductByIdSlice";
 import addProduct from "./addProductSlice";
 import deleteProductByIdReducer from "./deleteProductByIdSlice";
 import updatedProductReducer from "./updateProductSlice";
+import cartReducer from "./cartSlice";
+import getCartDataReducer from "./getCartSlice";
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 
 export const store = configureStore({
@@ -14,6 +16,8 @@ export const store = configureStore({
     addProduct: addProduct,
     deleteProductId: deleteProductByIdReducer,
     updatedProduct: updatedProductReducer,
+    cartData: cartReducer,
+    getCartData: getCartDataReducer,
   },
 });
 

@@ -1,7 +1,7 @@
 import { databaseConnection } from "@/lib/dbConfig";
 import { ImageBasestring64 } from "@/lib/ImageBasestring64";
 import Product, { ProductType } from "@/lib/models/ProductModel";
-import { verfyToken } from "@/lib/tokenmanage/verfyToken";
+import { checkAdmin } from "@/lib/tokenmanage/checkAdmin";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
 
   try {
     await databaseConnection();
-    await verfyToken(req);
+    await checkAdmin(req);
 
     if (
       !image ||
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     const basestring64 = await ImageBasestring64(image);
     const priceData = parseInt(price);
     const productData = {
-      image:basestring64,
+      image: basestring64,
       name,
       price: priceData,
       category,

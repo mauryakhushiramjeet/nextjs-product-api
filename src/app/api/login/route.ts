@@ -27,9 +27,9 @@ export async function POST(req: NextRequest) {
         message: "Password not matched",
       });
     }
-    // console.log(user._id);
     const token = await createToken(user._id, user.role);
-    // console.log(token);
+
+    console.log("backend token is :-----> here", token);
     const response = NextResponse.json({
       success: true,
       message: "User login successfully",
@@ -41,12 +41,12 @@ export async function POST(req: NextRequest) {
       },
       token,
     });
-    response.cookies.set({ name: "token", value: token });
+    response.cookies.set({ name: "token", value: token, maxAge: 2*24* 60 * 60 });
     return response;
-  } catch (error) {
+  } catch (error: any) {
     return NextResponse.json({
       success: false,
-      message: error.message || "Something went wrong in signup",
+      message: error?.message || "Something went wrong in signup",
     });
   }
 }

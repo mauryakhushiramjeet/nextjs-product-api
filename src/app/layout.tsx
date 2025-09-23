@@ -13,7 +13,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <SessionWrapper>
-        <body cz-shortcut-listen="true" className=" bg-[#F5F5F5] px-5  w-full">
+        <body cz-shortcut-listen="true" className=" bg-[#FDFEF9] px-5  w-full">
           <Providers>
               <Navbar />
               {children}

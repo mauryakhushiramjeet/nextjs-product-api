@@ -27,14 +27,15 @@ const LoginPage = () => {
         formData
       );
       const response = await userLogin.data;
-      console.log(response);
+      // console.log(response);
       if (response.success) {
         toast.success(response.message);
         localStorage.setItem("role", response.data.role);
+        localStorage.setItem("userId", response.data.id);
         const role = response.data.role;
         console.log(role);
         if (role === "admin") router.push("/admin/dashboard");
-        else if (role === "user") router.push("/user/dashboard");
+        else if (role === "user") router.push("/");
       } else {
         toast.error(response.message);
       }

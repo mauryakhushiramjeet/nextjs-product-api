@@ -1,10 +1,10 @@
 import { models, Schema } from "mongoose";
 import mongoose from "mongoose";
 export interface ProductType {
-  _id?:string,
-  image: null|File|string
+  _id?: string;
+  image: null | File | string;
   name: string;
-  price: number|string;
+  price: number | string;
   category: string;
   description: string;
   available?: boolean;
@@ -38,6 +38,7 @@ const productSchema = new Schema<ProductType>({
     type: Boolean,
     required: true,
   },
+ 
 });
 const Product = models.Product || mongoose.model("Product", productSchema);
 export default Product;

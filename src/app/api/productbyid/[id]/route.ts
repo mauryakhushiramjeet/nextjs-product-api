@@ -1,7 +1,7 @@
 import { databaseConnection } from "@/lib/dbConfig";
 import Product from "@/lib/models/ProductModel";
 import { NextRequest, NextResponse } from "next/server";
-import { verfyToken } from "@/lib/tokenmanage/verfyToken";
+import { verifyToken } from "../../../../lib/tokenmanage/verifyToken";
 export async function GET(
   req: NextRequest,
   { params }: { params: { id: string } }
@@ -10,6 +10,7 @@ export async function GET(
   const { id } = await params;
   try {
     await databaseConnection();
+    await verifyToken(req)
     if (!id) {
       return NextResponse.json({
         success: false,

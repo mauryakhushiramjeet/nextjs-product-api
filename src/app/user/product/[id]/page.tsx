@@ -9,8 +9,14 @@ import React, { useEffect, useState } from "react";
 
 import { SwiperSlide, Swiper } from "swiper/react";
 import "swiper/css";
+import { addProductInCart } from "@/store/cartSlice";
+import { error } from "console";
+import { toast } from "react-toastify";
 
-// import "./styles.css";
+export interface cartDataType {
+  userId: string;
+  productId: string;
+}
 const ProductPage = () => {
   const [productDetailes, setProductDetailes] = useState<ProductType | null>(
     null
@@ -21,6 +27,7 @@ const ProductPage = () => {
   const getAllProductData = useAppSelector((store) => store.products);
 
   const productData = useAppSelector((store) => store.Product);
+  const cartData = useAppSelector((store) => store.cartData);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { id } = useParams();
@@ -52,8 +59,33 @@ const ProductPage = () => {
       setProductRelated(categoryRelatedProduct);
     }
   }, [getAllProductData, productDetailes]);
-  if (productRelated) {
-    console.log("Product related data is here", productRelated);
+
+  const handleAddToCart = (productId: string) => {
+    const userId = localStorage.getItem("userId");
+    if (!userId || !productId) {
+      return;
+    }
+    console.log("user id is :", userId, "productId is :", productId);
+    const data: cartDataType = {
+      userId: userId,
+      productId: productId,
+    };
+    dispatch(addProductInCart(data))
+      .then((res) => {
+        console.log(res, "res is ");
+        if (res.payload.success) {
+          toast.success(res.payload.message);
+        } else {
+          toast.error(res.payload.message);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(error);
+      });
+  };
+  if (cartData) {
+    console.log(cartData);
   }
   if (productData.loading) return <div>Loading...</div>;
   if (productData.isError) return <div>Something went wrong</div>;
@@ -68,7 +100,7 @@ const ProductPage = () => {
               alt="product-image"
               height={700}
               width={700}
-              className="object-contain h-[300px] "
+              className=" h-[300px] w-full max-w-[350px] object-fill"
             />
           )}
         </div>
@@ -89,6 +121,26 @@ const ProductPage = () => {
           >
             {productDetailes?.available ? "Available in stock" : "Out of Stock"}
           </p>
+          <div className="flex gap-5 items-center font-semibold">
+            <button
+              onClick={() => {
+                if (productDetailes?._id) {
+                  handleAddToCart(productDetailes?._id);
+                }
+              }}
+              disabled={productDetailes?.available == false}
+              className={`${
+                productDetailes?.available
+                  ? "cursor-pointer"
+                  : "cursor-no-drop opacity-75"
+              } px-3 py-2 bg-[#E2DFD2]  text-black text-base  rounded-lg`}
+            >
+              ADD TO CART
+            </button>
+            <button className="px-3 py-2 bg-[#D0F0C0] text-gray-900 text-base rounded-lg">
+              BUY NOW
+            </button>
+          </div>
         </div>
       </div>
       <div className="my-6">
@@ -97,12 +149,12 @@ const ProductPage = () => {
           <p className="w-16 h-1 rounded-full bg-black"></p>
           <p className="">Recommende productes</p>
         </div>
-        <div className="">
+        <div className="mt-5">
           <Swiper slidesPerView={4} spaceBetween={10}>
             {(productRelated || []).map((relatedProduct) => (
               <SwiperSlide key={relatedProduct._id}>
                 <div
-                  className="flex w-[300px] cursor-pointer rounded-xl p-3 flex-col gap-1 bg-gray-200"
+                  className="flex w-[300px] cursor-pointer rounded-xl p-3 flex-col gap-1 bg-white"
                   onClick={() =>
                     router.push(`/user/product/${relatedProduct._id}`)
                   }
@@ -113,7 +165,7 @@ const ProductPage = () => {
                       alt="related product"
                       height={300}
                       width={500}
-                      className="rounded-xl h-[300px] w-[300px]"
+                      className="rounded-xl h-[300px] w-[300px] object-cover"
                     />
                   )}
                   <p className="text-gray-800 text-sm font-medium">

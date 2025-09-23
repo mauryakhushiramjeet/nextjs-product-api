@@ -19,6 +19,7 @@ export default async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.nextUrl));
     }
   }
+  // console.log("token is here show in middelware", token);
   if (isPublic && token && role == "admin") {
     return NextResponse.redirect(new URL("/admin/dashboard", request.nextUrl));
   }
@@ -30,7 +31,14 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.nextUrl));
   }
   const adminRoutes = ["/admin/dashboard"];
-  const userRoutes = ["/"];
+  const userRoutes = [
+    "/",
+    "/user/aboutUs",
+    "/user/contactUs",
+    "/user/shopping",
+    `/user/:path`,
+    "/user/cart",
+  ];
   if (role == "user") {
     if (adminRoutes.includes(path)) {
       return NextResponse.redirect(new URL("/", request.nextUrl));
@@ -53,5 +61,10 @@ export const config = {
     "/signup",
     "/signIn",
     "/admin/dashboard",
+    "/user/aboutUs",
+    "/user/contactUs",
+    "/user/shopping",
+    `/user/:path`,
+    "/user/cart",
   ],
 };

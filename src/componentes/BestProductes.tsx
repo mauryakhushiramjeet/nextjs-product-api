@@ -4,8 +4,8 @@ import { getAllProduct } from "@/store/getProductSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useContext, useEffect, useState } from "react";
-import { string } from "yup";
+import React, { useEffect, useState } from "react";
+
 const BestProductes = () => {
   const [allproductes, setAllProductes] = useState<ProductType[]>([]);
   const dispatch = useAppDispatch();
@@ -30,21 +30,21 @@ const BestProductes = () => {
         <p className="w-16 h-1 rounded-full bg-black"></p>
         <p className="">Bestseller productes</p>
       </div>
-      <div className="grid grid-cols-4 gap-5">
+      <div className="grid grid-cols-4 gap-5 mt-5">
         {(allproductes || []).map((product, index) => (
           <div
             key={index}
             onClick={() => router.push(`/user/product/${product._id}`)}
             className={`${
               product.bestSeller ? "block" : "hidden"
-            } bg-white rounded-xl p-3 flex flex-col gap-2 cursor-pointer`}
+            } bg-[#F5F6EF] shadow rounded-xl p-3 flex flex-col gap-2 cursor-pointer`}
           >
             {typeof product.image === "string" && (
               <Image
                 src={product.image}
                 height={200}
                 width={200}
-                className=" rounded-xl h-[300px] w-[400px] object-fill"
+                className=" rounded-xl h-[300px] w-[400px] object-cover"
                 alt={product.name || "product image"}
               />
             )}

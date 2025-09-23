@@ -1,8 +1,8 @@
 import { databaseConnection } from "@/lib/dbConfig";
 import { ImageBasestring64 } from "@/lib/ImageBasestring64";
-import Product, { ProductType } from "@/lib/models/ProductModel";
-import { verfyToken } from "@/lib/tokenmanage/verfyToken";
+import Product from "@/lib/models/ProductModel";
 import { NextRequest, NextResponse } from "next/server";
+import { checkAdmin } from "@/lib/tokenmanage/checkAdmin";
 
 export async function PUT(
   req: NextRequest,
@@ -15,7 +15,7 @@ export async function PUT(
   console.log(FormData);
   try {
     await databaseConnection();
-    await verfyToken(req);
+    await checkAdmin(req);
     if (!id) {
       return NextResponse.json({ sucess: false, message: "Id is required" });
     }
