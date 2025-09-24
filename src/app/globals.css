@@ -8,12 +8,14 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --font-Inter: "Inter";
+  --font-Zalando-Sans-Expanded: "Zalando Sans Expanded";
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --background-image-hero2: url("/images/productimagesbg.webp");
-  --font-roboto:"Roboto", sans-serif;
-  --font-Open-sans:"Open Sans",sans-serif;
-  --font-Inter:"Inter"
+  --font-roboto: "Roboto", sans-serif;
+  --font-Open-sans: "Open Sans", sans-serif;
+  --font-Inter: "Inter";
 }
 
 /* @media (prefers-color-scheme: dark) {

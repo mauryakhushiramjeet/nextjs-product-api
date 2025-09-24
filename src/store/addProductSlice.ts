@@ -21,7 +21,7 @@ export const addProduct = createAsyncThunk(
         }
       });
       const response = await addData.data
-      console.log("add product data from slice", response);
+      // console.log("add product data from slice", response);
       return response;
     } catch (error) {
       console.log(error);

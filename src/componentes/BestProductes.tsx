@@ -21,7 +21,7 @@ const BestProductes = () => {
     }
   }, [productes]);
 
-  console.log(productes);
+  // console.log(productes);
 
   return (
     <div className="mt-10">

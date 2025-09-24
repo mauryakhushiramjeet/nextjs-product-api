@@ -35,7 +35,7 @@ export const getAllProduct = createAsyncThunk(
     try {
       const getProduct = await axiosInstance.get("/getproduct");
       const response = await getProduct.data;
-      console.log(response.product)
+      // console.log(response.product)
       return response
     } catch (error) {
       console.log(error);

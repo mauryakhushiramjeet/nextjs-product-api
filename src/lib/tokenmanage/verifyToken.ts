@@ -11,18 +11,12 @@ export const verifyToken = async (req: NextRequest) => {
     token,
     new TextEncoder().encode(process.env.JWT_KEY as string)
   );
-  console.log("token is", token);
 
-  console.log(tokenDecoded);
   const { id, role } = tokenDecoded;
 
-  console.log("id is", id);
-  console.log(role, "role is");
   const user = await User.findById(id);
-  console.log("useris", user);
   if (!user) {
     throw new Error("user not authorized, please login");
   }
-
-  return { user, role };
+  return { user, role, id };
 };

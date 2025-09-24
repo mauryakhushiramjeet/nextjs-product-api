@@ -29,7 +29,6 @@ export async function POST(req: NextRequest) {
     }
     const token = await createToken(user._id, user.role);
 
-    console.log("backend token is :-----> here", token);
     const response = NextResponse.json({
       success: true,
       message: "User login successfully",

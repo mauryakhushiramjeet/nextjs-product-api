@@ -1,13 +1,15 @@
 import { databaseConnection } from "@/lib/dbConfig";
 import Cart, { CartSchemaType } from "@/lib/models/CartModel";
-import Product from "@/lib/models/ProductModel";
+import Product, { ProductType } from "@/lib/models/ProductModel";
+import { verifyToken } from "@/lib/tokenmanage/verifyToken";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   const cardData = await req.json();
-  const { userId, productId } = cardData;
+  const { userId, productId, quantityQuery } = cardData;
   try {
     await databaseConnection();
+    await verifyToken(req);
 
     if (!productId) {
       return NextResponse.json({
@@ -30,24 +32,32 @@ export async function POST(req: NextRequest) {
     }
     const existingCartProduct = await Cart.findOne({ userId, productId });
     if (existingCartProduct) {
-      existingCartProduct.quantity += 1;
+      if (quantityQuery) {
+        existingCartProduct.quantity -= 1;
+        existingCartProduct.total -= existProduct.price;
+      } else {
+        existingCartProduct.quantity += 1;
+        existingCartProduct.total += existProduct.price;
+      }
       await existingCartProduct.save();
       return NextResponse.json({
         success: true,
-        message: "cart updated",
         data: { existingCartProduct },
       });
     }
     const cartData: CartSchemaType = {
       userId,
+      quantityQuery,
       productId,
+      productDetailes: existProduct,
       quantity: 1,
+      total: existProduct.price,
       addedAt: new Date(),
     };
     const cart = new Cart(cartData);
     await cart.save();
     return NextResponse.json({
-      succes: true,
+      success: true,
       message: "Cart added successfully",
       data: cart,
     });

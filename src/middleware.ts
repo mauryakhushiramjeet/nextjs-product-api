@@ -13,13 +13,11 @@ export default async function middleware(request: NextRequest) {
         new TextEncoder().encode(process.env.JWT_KEY as string)
       );
       role = decoded.role;
-      console.log("Role is:", role);
     } catch (err) {
       console.log(err);
       return NextResponse.redirect(new URL("/login", request.nextUrl));
     }
   }
-  // console.log("token is here show in middelware", token);
   if (isPublic && token && role == "admin") {
     return NextResponse.redirect(new URL("/admin/dashboard", request.nextUrl));
   }

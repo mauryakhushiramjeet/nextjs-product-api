@@ -10,7 +10,7 @@ export const addProductInCart = createAsyncThunk(
       console.log(data);
       const addcart = await axiosInstance.post("/cart", data );
       const response = await addcart.data;
-      console.log(response);
+      // console.log(response);
       return response;
     } catch (error) {
       return rejectWithValue(error);
@@ -20,7 +20,7 @@ export const addProductInCart = createAsyncThunk(
 interface initialStateType {
   isLoading: boolean;
   isError: boolean;
-  cartData: CartSchemaType | null;
+  cartData: CartSchemaType []| null;
 }
 const initialState: initialStateType = {
   isError: false,

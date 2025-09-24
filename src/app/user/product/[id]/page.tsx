@@ -12,10 +12,12 @@ import "swiper/css";
 import { addProductInCart } from "@/store/cartSlice";
 import { error } from "console";
 import { toast } from "react-toastify";
+import { getCartByUserId } from "@/store/getCartSlice";
 
 export interface cartDataType {
   userId: string;
   productId: string;
+  quantityQuery?:boolean
 }
 const ProductPage = () => {
   const [productDetailes, setProductDetailes] = useState<ProductType | null>(
@@ -75,6 +77,8 @@ const ProductPage = () => {
         console.log(res, "res is ");
         if (res.payload.success) {
           toast.success(res.payload.message);
+          dispatch(getCartByUserId());
+          return;
         } else {
           toast.error(res.payload.message);
         }
