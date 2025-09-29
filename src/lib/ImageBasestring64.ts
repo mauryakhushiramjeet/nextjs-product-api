@@ -1,4 +1,3 @@
-import { arrayBuffer, buffer } from "stream/consumers";
 
 export const ImageBasestring64 = async (image: File) => {
   const arrayBuffer = await image.arrayBuffer();

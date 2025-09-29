@@ -5,7 +5,6 @@ import { addProductValidation } from "@/utils/schema/addProductSchema";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { toast } from "react-toastify";
 import { addProduct } from "@/store/addProductSlice";
-import { useRouter } from "next/navigation";
 import { BiLoaderCircle } from "react-icons/bi";
 import { useState } from "react";
 import { getProductById } from "@/store/getProductByIdSlice";

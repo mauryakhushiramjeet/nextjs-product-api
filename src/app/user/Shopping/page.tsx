@@ -50,7 +50,7 @@ const ShoppingPage = () => {
     }
   };
   useEffect(() => {
-      handleSearch(searchText);
+    handleSearch(searchText);
   }, [searchText]);
   interface filterButtons {
     category: string;
@@ -72,7 +72,7 @@ const ShoppingPage = () => {
   ];
   const handleFilterProducts = (option: string, category: string) => {
     if (category == "Price") {
-      let filteredPrice = [...allproductes];
+      const filteredPrice = [...allproductes];
       if (option == "Low to High") {
         filteredPrice.sort((a, b) => Number(a.price) - Number(b.price));
       } else {
@@ -101,6 +101,7 @@ const ShoppingPage = () => {
       }
     }
   };
+ 
   return (
     <div className="mt-6 w-full relative">
       {isSidebarOpen ? (

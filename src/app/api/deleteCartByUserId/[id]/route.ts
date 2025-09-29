@@ -1,31 +1,31 @@
 import { databaseConnection } from "@/lib/dbConfig";
 import Cart from "@/lib/models/CartModel";
-import { verifyToken } from "@/lib/tokenmanage/verifyToken";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function DELETE(
   req: NextRequest,
   { params }: { params: { id: string } }
 ): Promise<NextResponse> {
-  const id = params.id as string;
+  const { id } =params;
+  console.log("here is uder id", id);
   try {
     await databaseConnection();
-    await verifyToken(req);
     if (!id) {
       return NextResponse.json({
         success: false,
-        message: "Cart id is required.",
+        message: "Id is not available",
       });
     }
-    const cartExist = await Cart.findByIdAndDelete(id);
-    if (!cartExist) {
-      return NextResponse.json({ success: false, message: "Cart not found" });
+    const deletedCartData = await Cart.deleteMany({ userId: id });
+    if (!deletedCartData) {
+      return NextResponse.json({
+        success: false,
+        message: "Cart is not available",
+      });
     }
-    return NextResponse.json({
-      success: true,
-      message: "Cart deleted successfully.",
-    });
+    return NextResponse.json({ success: true, message: " successfully" });
   } catch (error: any) {
+    console.log();
     return NextResponse.json({ success: false, message: error.message });
   }
 }

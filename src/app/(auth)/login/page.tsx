@@ -1,16 +1,17 @@
 "use client";
 import axios from "axios";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { RoleContext } from "../../../lib/contex/roleContext";
 const LoginPage = () => {
-  const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-
+  const router = useRouter();
+  const { setRole } = useContext(RoleContext);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -31,6 +32,7 @@ const LoginPage = () => {
       if (response.success) {
         toast.success(response.message);
         localStorage.setItem("role", response.data.role);
+        setRole(response.data.role);
         localStorage.setItem("userId", response.data.id);
         const role = response.data.role;
         console.log(role);

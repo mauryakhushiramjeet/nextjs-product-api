@@ -1,40 +1,24 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema, Types } from "mongoose";
 import { ProductType } from "./ProductModel";
-import { number } from "yup";
 
 export interface CartSchemaType {
   _id?: string;
-  userId: string;
-  productId: string;
+  userId: Types.ObjectId;
+  productId: Types.ObjectId;
   quantityQuery: boolean;
   productDetailes: ProductType;
   addedAt: Date;
   total: number;
   quantity: number;
 }
-export const CartSchemaInitial: CartSchemaType = {
-  userId: "",
-  productId: "",
-  quantityQuery: false,
-  total: 0,
-  productDetailes: {
-    image: "",
-    name: "",
-    price: "",
-    category: "",
-    description: "",
-    bestSeller: false,
-    available: false,
-  },
-  addedAt: new Date(),
-  quantity: 0,
-};
 const CartSchema = new Schema<CartSchemaType>({
   userId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
   },
   productId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Product",
   },
   productDetailes: {
     type: Object,

@@ -3,15 +3,13 @@ import { ProductType } from "@/lib/models/ProductModel";
 import { getAllProduct } from "@/store/getProductSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { TbEdit } from "react-icons/tb";
 import { AiOutlineDelete } from "react-icons/ai";
 import Image from "next/image";
 import ConfirmPop from "./ConfirmPop";
 import { productDeleteById } from "@/store/deleteProductByIdSlice";
 import { toast } from "react-toastify";
-import { string } from "yup";
-import { Router } from "next/router";
+
 
 interface OnEditType {
   onEdite: (id: string) => void;

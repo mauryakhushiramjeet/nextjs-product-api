@@ -1,6 +1,5 @@
 import { axiosInstance } from "@/axios/axiosInstance";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
 
 export const updateProductId = createAsyncThunk(
   "update/product",

@@ -1,7 +1,6 @@
 import { axiosInstance } from "@/axios/axiosInstance";
-import { CartSchemaInitial, CartSchemaType } from "@/lib/models/CartModel";
+import {  CartSchemaType } from "@/lib/models/CartModel";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
 
 export const getCartByUserId = createAsyncThunk(
   "/getcart",

@@ -7,6 +7,11 @@ import deleteProductByIdReducer from "./deleteProductByIdSlice";
 import updatedProductReducer from "./updateProductSlice";
 import cartReducer from "./cartSlice";
 import getCartDataReducer from "./getCartSlice";
+import addressReducer from "./addressSlice";
+import getAddressReducer from "./getaddressSlice";
+import deleteCartReducer from "./deleteCartByUserIdSlice";
+import gertOrderReduce from "./getOrderSlice";
+import updatedStuasReducer from "./updateStatusSlice";
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 
 export const store = configureStore({
@@ -18,6 +23,11 @@ export const store = configureStore({
     updatedProduct: updatedProductReducer,
     cartData: cartReducer,
     getCartData: getCartDataReducer,
+    orderByAddress: addressReducer,
+    getAddressById: getAddressReducer,
+    deletecart: deleteCartReducer,
+    getOrderDetails: gertOrderReduce,
+    updatedStatus: updatedStuasReducer,
   },
 });
 

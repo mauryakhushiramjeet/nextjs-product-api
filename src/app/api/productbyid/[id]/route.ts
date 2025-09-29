@@ -5,9 +5,9 @@ import { verifyToken } from "../../../../lib/tokenmanage/verifyToken";
 export async function GET(
   req: NextRequest,
   { params }: { params: { id: string } }
-) {
+): Promise<NextResponse> {
   // const {id}=await para
-  const { id } = await params;
+  const { id } =params;
   try {
     await databaseConnection();
     await verifyToken(req)

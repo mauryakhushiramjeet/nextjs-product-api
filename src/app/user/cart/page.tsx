@@ -14,12 +14,14 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { cartDataType } from "../product/[id]/page";
 import { addProductInCart } from "@/store/cartSlice";
+import mongoose from "mongoose";
 
 const CartPage = () => {
   const [cartProductDetailes, setCartProductDetailes] = useState<
     CartSchemaType[] | null
   >(null);
   const [cartSubtotals, setCartSubTotal] = useState<number>(0);
+  const [totalAmount, setTotalAmount] = useState<number>(0);
   const router = useRouter();
   const shippingFees: number = 10;
   const getCartData = useAppSelector((store) => store.getCartData);
@@ -43,6 +45,7 @@ const CartPage = () => {
           0
         ) || 0;
       setCartSubTotal(cardSubTotal);
+      setTotalAmount(cardSubTotal + shippingFees);
     }
   }, [getCartData]);
 
@@ -61,7 +64,10 @@ const CartPage = () => {
         toast.error(error);
       });
   };
-  const handleQuantityeDec = (userId: string, productId: string) => {
+  const handleQuantityeDec = (
+    userId: mongoose.Types.ObjectId,
+    productId: mongoose.Types.ObjectId
+  ) => {
     const data: cartDataType = {
       userId: userId,
       productId: productId,
@@ -83,7 +89,10 @@ const CartPage = () => {
         toast.error(error);
       });
   };
-  const handleQuantityeInc = (userId: string, productId: string) => {
+  const handleQuantityeInc = (
+    userId: mongoose.Types.ObjectId,
+    productId: mongoose.Types.ObjectId
+  ) => {
     const data: cartDataType = {
       userId: userId,
       productId: productId,
@@ -104,6 +113,24 @@ const CartPage = () => {
         toast.error(error);
       });
   };
+  console.log(getCartData);
+
+  const handlePlaceOrderDetails = () => {
+    const order = {
+      totalAmount,
+      items: cartProductDetailes?.map((item) => ({
+        product: {
+          productId: new mongoose.Types.ObjectId(item.productId),
+          productName: item.productDetailes.name,
+        },
+        quantity: item.quantity,
+        price: item.productDetailes.price,
+      })),
+    };
+    localStorage.setItem("orderDetails", JSON.stringify(order));
+    router.push("/user/shippingDetailes");
+  };
+  
   return (
     <>
       {cartProductDetailes && cartProductDetailes?.length > 0 ? (
@@ -165,7 +192,7 @@ const CartPage = () => {
                               alt={item.productDetailes.name}
                               height={70}
                               width={70}
-                              className="h-[70px] w-[70px]"
+                              className="h-[70px] w-[70px] object-cover"
                             />
                             <div className="flex flex-col gap-1">
                               <p>{item.productDetailes.name}</p>
@@ -190,7 +217,10 @@ const CartPage = () => {
                                   : "cursor-pointer"
                               }`}
                               onClick={() =>
-                                handleQuantityeDec(item.userId, item.productId)
+                                handleQuantityeDec(
+                                  new mongoose.Types.ObjectId(item.userId),
+                                  new mongoose.Types.ObjectId(item.productId)
+                                )
                               }
                             >
                               <AiOutlineMinus />
@@ -199,7 +229,10 @@ const CartPage = () => {
                             <button
                               className="w-fit cursor-pointer"
                               onClick={() =>
-                                handleQuantityeInc(item.userId, item.productId)
+                                handleQuantityeInc(
+                                  new mongoose.Types.ObjectId(item.userId),
+                                  new mongoose.Types.ObjectId(item.productId)
+                                )
                               }
                             >
                               <GoPlus />
@@ -245,9 +278,13 @@ const CartPage = () => {
                 </div>
                 <div className="py-3 border-t border-t-gray-200 flex items-center justify-between">
                   <p>Total</p>
-                  <p>{shippingFees + cartSubtotals}.00 Rs</p>
+                  <p>{totalAmount}.00 Rs</p>
                 </div>
-                <button className="bg-gray-800 text-white w-full cursor-pointer py-2 text-base">
+                <button
+                  className="bg-gray-800 text-white w-full cursor-pointer py-2 text-base"
+                  // onClick={() => router.push("/user/shippingDetailes")}
+                  onClick={() => handlePlaceOrderDetails()}
+                >
                   Proceed to Checkout
                 </button>
               </div>

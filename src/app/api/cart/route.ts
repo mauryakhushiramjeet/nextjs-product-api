@@ -1,6 +1,6 @@
 import { databaseConnection } from "@/lib/dbConfig";
 import Cart, { CartSchemaType } from "@/lib/models/CartModel";
-import Product, { ProductType } from "@/lib/models/ProductModel";
+import Product from "@/lib/models/ProductModel";
 import { verifyToken } from "@/lib/tokenmanage/verifyToken";
 import { NextRequest, NextResponse } from "next/server";
 

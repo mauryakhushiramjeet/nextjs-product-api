@@ -3,8 +3,8 @@ import Image from "next/image";
 import { MdOutlineAddCircleOutline } from "react-icons/md";
 import { AiFillProduct } from "react-icons/ai";
 import AddProduct from "@/componentes/AddProduct";
-import { useEffect, useState } from "react";
 import ViewProduct from "@/componentes/ViewProduct";
+import { useState } from "react";
 
 const AdminDashboard = () => {
   const [activePage, setActivePage] = useState<string>("ViewProduct");

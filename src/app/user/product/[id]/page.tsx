@@ -10,14 +10,15 @@ import React, { useEffect, useState } from "react";
 import { SwiperSlide, Swiper } from "swiper/react";
 import "swiper/css";
 import { addProductInCart } from "@/store/cartSlice";
-import { error } from "console";
 import { toast } from "react-toastify";
+import mongoose from "mongoose";
+
 import { getCartByUserId } from "@/store/getCartSlice";
 
 export interface cartDataType {
-  userId: string;
-  productId: string;
-  quantityQuery?:boolean
+  userId: mongoose.Types.ObjectId;
+  productId: mongoose.Types.ObjectId;
+  quantityQuery?: boolean;
 }
 const ProductPage = () => {
   const [productDetailes, setProductDetailes] = useState<ProductType | null>(
@@ -62,14 +63,16 @@ const ProductPage = () => {
     }
   }, [getAllProductData, productDetailes]);
 
-  const handleAddToCart = (productId: string) => {
+  const handleAddToCart = (productId: mongoose.Types.ObjectId) => {
     const userId = localStorage.getItem("userId");
     if (!userId || !productId) {
       return;
     }
+
+    const localUserId = new mongoose.Types.ObjectId(userId);
     console.log("user id is :", userId, "productId is :", productId);
     const data: cartDataType = {
-      userId: userId,
+      userId: localUserId,
       productId: productId,
     };
     dispatch(addProductInCart(data))
@@ -104,7 +107,7 @@ const ProductPage = () => {
               alt="product-image"
               height={700}
               width={700}
-              className=" h-[300px] w-full max-w-[350px] object-fill"
+              className=" h-[300px] w-full max-w-[350px] object-cover"
             />
           )}
         </div>
@@ -129,7 +132,9 @@ const ProductPage = () => {
             <button
               onClick={() => {
                 if (productDetailes?._id) {
-                  handleAddToCart(productDetailes?._id);
+                  handleAddToCart(
+                    new mongoose.Types.ObjectId(productDetailes?._id)
+                  );
                 }
               }}
               disabled={productDetailes?.available == false}

@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 export const databaseConnection = async () => {
   try {
     await mongoose.connect(
-      "mongodb://127.0.0.1:27017/ecommerce-project?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.6"
+      "mongodb+srv://peterapps70_db_user:u2Um08gsTeUKfhZl@cluster0.g0ekjkv.mongodb.net/ecommerce-project?retryWrites=true&w=majority&appName=Cluster0"
     );
     mongoose.connection.on("connect", () => {
       console.log("data base connected successfully");

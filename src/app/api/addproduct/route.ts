@@ -1,6 +1,6 @@
 import { databaseConnection } from "@/lib/dbConfig";
 import { ImageBasestring64 } from "@/lib/ImageBasestring64";
-import Product, { ProductType } from "@/lib/models/ProductModel";
+import Product from "@/lib/models/ProductModel";
 import { checkAdmin } from "@/lib/tokenmanage/checkAdmin";
 import { NextRequest, NextResponse } from "next/server";
 

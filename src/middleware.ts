@@ -28,7 +28,11 @@ export default async function middleware(request: NextRequest) {
   if (!isPublic && (!token || !role)) {
     return NextResponse.redirect(new URL("/login", request.nextUrl));
   }
-  const adminRoutes = ["/admin/dashboard"];
+  const adminRoutes = [
+    "/admin/dashboard",
+    "/admin/order",
+    "/admin/orderDetailes/:id",
+  ];
   const userRoutes = [
     "/",
     "/user/aboutUs",
@@ -36,6 +40,8 @@ export default async function middleware(request: NextRequest) {
     "/user/shopping",
     `/user/:path`,
     "/user/cart",
+    "/user/shippingDetailes",
+    "/user/order",
   ];
   if (role == "user") {
     if (adminRoutes.includes(path)) {
@@ -64,5 +70,6 @@ export const config = {
     "/user/shopping",
     `/user/:path`,
     "/user/cart",
+    "/admin/orderDetailes/:id",
   ],
 };

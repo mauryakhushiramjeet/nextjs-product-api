@@ -4,7 +4,7 @@ import User from "../models/UserModel";
 export const verifyToken = async (req: NextRequest) => {
   const authHeader = req.headers.get("Authorization");
   const token = authHeader?.split(" ")[1];
-
+  console.log(token);
   if (!token) throw new Error("token not exist, please login");
 
   const { payload: tokenDecoded } = await jose.jwtVerify(
