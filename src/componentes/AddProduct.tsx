@@ -143,7 +143,7 @@ const AddProduct: React.FC<productIdType> = ({ productId, setProductId }) => {
   }, [editedProduct?.data, productId]);
   // console.log(values);
   return (
-    <div>
+    <div className="">
       <h1 className="text-2xl font-bold mb-5">
         {productId ? "Update Product" : "Add Product"}
       </h1>

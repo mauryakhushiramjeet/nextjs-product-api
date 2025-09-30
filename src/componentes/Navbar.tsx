@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { getCartByUserId } from "@/store/getCartSlice";
 import { RoleContext } from "@/lib/contex/roleContext";
+import Image from "next/image";
 const Navbar = () => {
   const [showProfile, setShowProfile] = useState<boolean>(false);
   const count = useAppSelector((store) => store.getCartData.cartData);
@@ -42,12 +43,7 @@ const Navbar = () => {
     ],
     admin: [{ menuName: "Order", route: "/admin/order" }],
   };
-  // const getRole = () => {
-  //   const role = localStorage.getItem("role");
-  //   console.log(role);
-  //   if (role) {
-  //     setRole(role);
-  //   }
+
   // };
   const router = useRouter();
   const handleLogout = () => {
@@ -64,21 +60,26 @@ const Navbar = () => {
     const role = localStorage.getItem("role");
     setRole(role);
   }, []);
-  console.log(role);
+  // console.log(role);
   if (!role) return;
   const menuItems = MENU_MAP[role] || [];
   return (
     <>
       {role != null && (
-        <div className="py-5 my-5 px-5 flex  justify-between w-full bg-gray-50 border border-[#FDFEF9] text-black shadow rounded-md  ">
+        <div className=" my-5 px-5 flex fixed top-[-21px] z-50 right-[2px] justify-between w-full bg-gray-50 border border-[#FDFEF9] text-black shadow rounded-md  ">
           <div>
-            {/* <Image src="/images/logo3.png" height={200} width={200} alt="logo" /> */}
-            lOGO
+            <Image
+              src="/images/logok.png"
+              height={200}
+              width={200}
+              alt="logo"
+              className="h-[90px]"
+            />
           </div>
           <div className="flex gap-4 items-center  font-semibold text-base">
             {menuItems.map((nav, index) => (
               <div
-                className="hover:bg-[#ACBBA2] px-3 py-1 rounded-lg cursor-pointer"
+                className="hover:bg-[#340D0E] hover:text-white px-3 py-1 rounded-lg cursor-pointer"
                 key={index}
                 onClick={() => router.push(nav.route)}
               >
@@ -88,7 +89,7 @@ const Navbar = () => {
           </div>
           <div className="flex  gap-6 items-center">
             {role === "user" && (
-              <div className="text-black flex px-3 py-1 cursor-pointer items-center gap-1 rounded-lg hover:bg-[#ACBBA2]">
+              <div className="text-black flex px-3 py-1 cursor-pointer items-center gap-1 rounded-lg hover:bg-[#340D0E] hover:text-white">
                 <FaShoppingCart />
                 <div
                   className="text-base relative w-fit"

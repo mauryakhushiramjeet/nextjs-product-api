@@ -6,7 +6,7 @@ const HomePage = () => {
   const router = useRouter();
   return (
     <div>
-      <div className="bg-hero2 bg-cover bg-center h-[400px]  mt-5 rounded-lg relative flex justify-center items-center">
+      <div className="bg-hero2 bg-cover bg-center h-[400px] mt-[117px] rounded-lg relative flex justify-center items-center">
         <div className="absolute inset-0 bg-white/30 z-10"></div>
         <div className="relative z-20  p-5 flex flex-col items-center">
           <p className="font-bold text-gray-800 text-4xl">

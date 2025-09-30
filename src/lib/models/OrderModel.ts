@@ -1,13 +1,14 @@
-import mongoose, { Schema, Types } from "mongoose";
-// Product inside each item
-interface Product {
+import mongoose, { models, Schema, Types } from "mongoose";
+import Product from "./ProductModel";
+import Address from "./AddressModel";
+
+interface ProductType {
   productId: Types.ObjectId;
   productName: string;
 }
 
-// Each item in the order
 export interface OrderItem {
-  product: Product;
+  product: ProductType;
   quantity: number;
   price: number;
 }
@@ -76,5 +77,5 @@ const OrderSchema = new Schema<OrderType>(
   },
   { timestamps: true }
 );
-const Order = mongoose.models.Order || mongoose.model("Order", OrderSchema);
+const Order = models.Order || mongoose.model("Order", OrderSchema);
 export default Order;

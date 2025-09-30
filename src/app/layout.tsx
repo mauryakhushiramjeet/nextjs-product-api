@@ -12,7 +12,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body cz-shortcut-listen="true" className=" bg-[#FDFEF9] px-5  w-full">
+      <body cz-shortcut-listen="true" className=" bg-[#FDFEF9] px-5  w-full relative">
         <RoleProvider>
           <Providers>
             <Navbar />

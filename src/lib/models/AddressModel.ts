@@ -1,4 +1,4 @@
-import mongoose, { Schema, Types } from "mongoose";
+import mongoose, { models, Schema, Types } from "mongoose";
 
 export interface addressType {
   _id?: string;
@@ -10,7 +10,7 @@ export interface addressType {
   state: string;
   country: string;
   addressType: string;
-  paymentMethod?:string
+  paymentMethod?: string;
 }
 const AddressSchema = new Schema<addressType>(
   {
@@ -30,7 +30,7 @@ const AddressSchema = new Schema<addressType>(
       type: String,
       required: true,
     },
-    
+
     city: {
       type: String,
       required: true,
@@ -53,6 +53,5 @@ const AddressSchema = new Schema<addressType>(
   },
   { timestamps: true }
 );
-const Address =
-  mongoose.models.Address || mongoose.model("Address", AddressSchema);
+const Address = models.Address || mongoose.model("Address", AddressSchema);
 export default Address;

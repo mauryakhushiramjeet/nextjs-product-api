@@ -10,7 +10,6 @@ import ConfirmPop from "./ConfirmPop";
 import { productDeleteById } from "@/store/deleteProductByIdSlice";
 import { toast } from "react-toastify";
 
-
 interface OnEditType {
   onEdite: (id: string) => void;
 }

@@ -12,6 +12,7 @@ import getAddressReducer from "./getaddressSlice";
 import deleteCartReducer from "./deleteCartByUserIdSlice";
 import gertOrderReduce from "./getOrderSlice";
 import updatedStuasReducer from "./updateStatusSlice";
+import getOrderDetailsByOrderId from "./getOrderDetailsByOrderIdSlice";
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 
 export const store = configureStore({
@@ -28,6 +29,7 @@ export const store = configureStore({
     deletecart: deleteCartReducer,
     getOrderDetails: gertOrderReduce,
     updatedStatus: updatedStuasReducer,
+    getOrderbyOrderId: getOrderDetailsByOrderId,
   },
 });
 

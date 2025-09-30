@@ -5,11 +5,18 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { OrderItem, OrderType } from "@/lib/models/OrderModel";
 import { useRouter } from "next/navigation";
+import ConfirmPopup from "@/componentes/ConfirmPop";
+import { UpdateStatusById } from "@/store/updateStatusSlice";
 
 const Orderpage = () => {
   const [order, setOrder] = useState<OrderType[] | null>(null);
+  const [showModel, setShowModel] = useState<boolean>(false);
+  const [updateStatusOrderId, setUpdateStatusOrderId] = useState<string | null>(
+    null
+  );
   const orderDetails = useAppSelector((store) => store.getOrderDetails);
   const dispatch = useAppDispatch();
+
   const router = useRouter();
 
   useEffect(() => {
@@ -30,9 +37,27 @@ const Orderpage = () => {
   //         </p>
   //       </div>
   //     );
-  console.log(order);
+  // console.log(order);
+  const handleOrderCancel = () => {
+    console.log("order cancle btn  clicked");
+    if (!updateStatusOrderId) return;
+    dispatch(
+      UpdateStatusById({ id: updateStatusOrderId, status: "cancelled" })
+    ).then((res) => {
+      console.log(res.payload);
+      if (res.payload.success) {
+        setOrder(
+          (prev) =>
+            prev?.map((s) =>
+              s._id === updateStatusOrderId ? { ...s, status: "cancelled" } : s
+            ) || null
+        );
+        setShowModel(false);
+      }
+    });
+  };
   return (
-    <div className="w-full font-Inter">
+    <div className="w-full font-Inter mt-[112px]">
       {order && order?.length > 0 ? (
         <div className="px-10">
           <div className="font-semibold text-3xl flex gap-1 items-center ">
@@ -63,8 +88,15 @@ const Orderpage = () => {
                     <th className="px-2 py-2 border-b border-gray-400">
                       Status
                     </th>
+
                     <th className="px-2 py-2 border-b border-gray-400">
                       Order Date
+                    </th>
+                    <th className="px-2 py-2 border-b border-gray-400">
+                      Delivered On
+                    </th>
+                    <th className="px-2 py-2 border-b border-gray-400">
+                      Action
                     </th>
                   </tr>
                 </thead>
@@ -98,16 +130,48 @@ const Orderpage = () => {
                         {item.status}
                       </td>
                       {item.createdAt != null && (
-                        <td className="py-3 px-2 border-l border-l-gray-400">
-                          {new Date(item?.createdAt).toLocaleDateString()}
+                        <td className={` py-3 px-2 border-l border-l-gray-400`}>
+                          {new Date(item?.createdAt).toDateString()}
                         </td>
                       )}
+                      {item.updatedAt != null && item.status == "delivered" ? (
+                        <td className="py-3 px-2 border-l border-l-gray-400 text-green-700 font-semibold">
+                          {new Date(item?.updatedAt).toDateString()}
+                        </td>
+                      ) : (
+                        <td className="py-3 px-2 border-l border-l-gray-400">
+                          Not Yet Delivered
+                        </td>
+                      )}
+                      <td className="py-1 px-2  border-l border-l-gray-400">
+                        <button
+                          onClick={() => {
+                            setUpdateStatusOrderId(item._id as string);
+                            setShowModel(true);
+                          }}
+                          className={`${
+                            item.status == "pending"
+                              ? "bg-red-700 cursor-pointer"
+                              : " bg-red-600/50 cursor-no-drop"
+                          } py-1 px-3 rounded-lg border-l text-sm text-white border-l-gray-400`}
+                        >
+                          {" "}
+                          Cancel
+                        </button>
+                      </td>{" "}
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           </div>
+          {showModel && (
+            <ConfirmPopup
+              message="Are you sure , you want to cancele this order"
+              onCancel={() => setShowModel(false)}
+              onConfirm={handleOrderCancel}
+            />
+          )}
         </div>
       ) : (
         <div className="flex items-center justify-center h-[500px] flex-col">

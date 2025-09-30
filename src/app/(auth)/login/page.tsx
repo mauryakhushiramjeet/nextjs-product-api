@@ -35,7 +35,6 @@ const LoginPage = () => {
         setRole(response.data.role);
         localStorage.setItem("userId", response.data.id);
         const role = response.data.role;
-        console.log(role);
         if (role === "admin") router.push("/admin/dashboard");
         else if (role === "user") router.push("/");
       } else {

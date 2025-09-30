@@ -28,33 +28,43 @@ export default async function middleware(request: NextRequest) {
   if (!isPublic && (!token || !role)) {
     return NextResponse.redirect(new URL("/login", request.nextUrl));
   }
-  const adminRoutes = [
-    "/admin/dashboard",
-    "/admin/order",
-    "/admin/orderDetailes/:id",
-  ];
-  const userRoutes = [
-    "/",
-    "/user/aboutUs",
-    "/user/contactUs",
-    "/user/shopping",
-    `/user/:path`,
-    "/user/cart",
-    "/user/shippingDetailes",
-    "/user/order",
-  ];
+  // const adminRoutes = ["/admin/dashboard", "/admin/order"];
+  // const adminRoutesDynamic = [/^\/admin\/orderDetailes\/\d+$/];
+  // const userRoutes = [
+  //   "/",
+  //   "/user/aboutUs",
+  //   "/user/contactUs",
+  //   "/user/shopping",
+  //   `/user/:path`,
+  //   "/user/cart",
+  //   "/user/shippingDetailes",
+  //   "/user/order",
+  // ];
+  // if (role == "user") {
+  //   if (
+  //     adminRoutes.includes(path) ||
+  //     adminRoutesDynamic.some((route) => route.test(path))
+  //   ) {
+  //     return NextResponse.redirect(new URL("/", request.nextUrl));
+  //   }
+  // } else {
+  //   if (userRoutes.includes(path)) {
+  //     return NextResponse.redirect(
+  //       new URL("/admin/dashboard", request.nextUrl)
+  //     );
+  //   }
+  // }
   if (role == "user") {
-    if (adminRoutes.includes(path)) {
+    if (path.startsWith("/admin")) {
       return NextResponse.redirect(new URL("/", request.nextUrl));
     }
   } else {
-    if (userRoutes.includes(path)) {
+    if (path.startsWith("/user") || path == "/") {
       return NextResponse.redirect(
         new URL("/admin/dashboard", request.nextUrl)
       );
     }
   }
-
   return NextResponse.next();
 }
 
@@ -68,8 +78,8 @@ export const config = {
     "/user/aboutUs",
     "/user/contactUs",
     "/user/shopping",
-    `/user/:path`,
+    `/user/product/:path*`,
     "/user/cart",
-    "/admin/orderDetailes/:id",
+    "/admin/orderDetailes/:path*",
   ],
 };

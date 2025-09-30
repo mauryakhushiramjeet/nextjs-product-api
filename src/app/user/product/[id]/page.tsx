@@ -15,6 +15,19 @@ import mongoose from "mongoose";
 
 import { getCartByUserId } from "@/store/getCartSlice";
 
+type OrderItemType = {
+  product: {
+    productId: string;
+    productName: string;
+  };
+  quantity: number;
+  price: number;
+};
+
+type OrderDataType = {
+  totalAmount: number;
+  items: OrderItemType[];
+};
 export interface cartDataType {
   userId: mongoose.Types.ObjectId;
   productId: mongoose.Types.ObjectId;
@@ -64,6 +77,7 @@ const ProductPage = () => {
   }, [getAllProductData, productDetailes]);
 
   const handleAddToCart = (productId: mongoose.Types.ObjectId) => {
+    console.log("btn clicked")
     const userId = localStorage.getItem("userId");
     if (!userId || !productId) {
       return;
@@ -91,6 +105,20 @@ const ProductPage = () => {
         toast.error(error);
       });
   };
+  const handleBayNow = (id: string, name: string, price: number) => {
+    const data: OrderDataType = {
+      totalAmount: price,
+      items: [
+        {
+          product: { productId: id, productName: name },
+          quantity: 1,
+          price: price,
+        },
+      ],
+    };
+    localStorage.setItem("buyNowOrderData", JSON.stringify(data));
+    router.push("/user/shippingDetailes");
+  };
   if (cartData) {
     console.log(cartData);
   }
@@ -98,7 +126,7 @@ const ProductPage = () => {
   if (productData.isError) return <div>Something went wrong</div>;
   if (!productData.data) return <div>No product found</div>;
   return (
-    <div>
+    <div className="mt-[112px]">
       <div className="grid grid-cols-2 gap-20">
         <div className="">
           {typeof productDetailes?.image == "string" && (
@@ -146,7 +174,16 @@ const ProductPage = () => {
             >
               ADD TO CART
             </button>
-            <button className="px-3 py-2 bg-[#D0F0C0] text-gray-900 text-base rounded-lg">
+            <button
+              className="px-3 py-2 bg-[#D0F0C0] text-gray-900 text-base rounded-lg cursor-pointer"
+              onClick={() =>
+                handleBayNow(
+                  productDetailes?._id as string,
+                  productDetailes?.name as string,
+                  productDetailes?.price as number
+                )
+              }
+            >
               BUY NOW
             </button>
           </div>

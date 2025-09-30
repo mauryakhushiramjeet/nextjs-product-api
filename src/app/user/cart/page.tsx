@@ -134,7 +134,7 @@ const CartPage = () => {
   return (
     <>
       {cartProductDetailes && cartProductDetailes?.length > 0 ? (
-        <div className="w-full font-Inter">
+        <div className="w-full font-Inter mt-[112px]">
           <div className="font-semibold text-3xl flex gap-1 items-center ">
             {" "}
             <p className="w-16 h-1 bg-[#282C35] rounded-full "></p>
@@ -292,7 +292,7 @@ const CartPage = () => {
           </div>
         </div>
       ) : (
-        <div className="flex items-center justify-center h-[500px] flex-col">
+        <div className="flex items-center justify-center h-[500px] flex-col mt-[112px]">
           <div>
             <Image
               src="/images/cartImage.png"

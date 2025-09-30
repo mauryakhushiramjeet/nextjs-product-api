@@ -6,7 +6,6 @@ import Image from "next/image";
 import { OrderItem, OrderType } from "@/lib/models/OrderModel";
 import { useRouter } from "next/navigation";
 import { LuLoaderCircle } from "react-icons/lu";
-import mongoose from "mongoose";
 import { UpdateStatusById } from "@/store/updateStatusSlice";
 import { toast } from "react-toastify";
 
@@ -69,7 +68,7 @@ const AdminOrderpage = () => {
       </div>
     );
   return (
-    <div className="w-full font-Inter">
+    <div className="w-full font-Inter mt-[112px]">
       {order && order.length > 0 ? (
         <div className="px-10">
           <div className="font-semibold text-3xl flex gap-1 items-center ">
@@ -137,15 +136,20 @@ const AdminOrderpage = () => {
                       </td>
                       <td className="py-3 px-2 ">{item.paymentMethod}</td>
                       <td className="py-3 px-2 ">{item.totalAmount}.00 Rs</td>
-                      <td className="py-3 px-[2px] font-medium max-w-[80px]">
+                      <td className={` py-3 px-[2px] font-medium max-w-[80px]`}>
                         <select
+                          disabled={item.status == "cancelled"}
                           onChange={(e) => {
                             handleOrderStatus(
                               item._id as string,
                               e.target.value
                             );
                           }}
-                          className=" font-medium bg-transparent border border-gray-400 rounded  py-1"
+                          className={`${
+                            item.status === "cancelled"
+                              ? " bg-gray-800"
+                              : "cursor-pointer"
+                          } font-medium bg-transparent border border-gray-400 rounded  py-1`}
                           value={
                             status.find((s) => s.id == item._id)?.status ||
                             "pending"

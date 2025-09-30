@@ -1,19 +1,38 @@
 import { axiosInstance } from "@/axios/axiosInstance";
 import { ProductType } from "@/lib/models/ProductModel";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { Types } from "mongoose";
 
 export interface GetOrderDetailsTypes {
   _id?: string;
-  userId?: string;
-  addressId?: string;
+  userId?: {
+    _id: Types.ObjectId;
+    name: string;
+    email: string;
+  };
+  addressId?: {
+    _id: Types.ObjectId;
+    address: string;
+    addressType: string;
+    city: string;
+    country: string;
+    phone: string;
+    state: string;
+  };
   status?: string;
   totalAmount: number;
+  paymentMethod: string;
   items: [
     {
-      product: { productId: string; productName: string };
+      product: {
+        productId: {
+          image: string;
+        };
+        productName: string;
+        image: string;
+      };
       quantity: number;
       price: number;
-      productDetails: ProductType;
     }
   ];
   addressDetails: {
@@ -25,15 +44,14 @@ export interface GetOrderDetailsTypes {
     country: string;
     addressType: string;
   };
-  userDetails: {
-    email: string;
-  };
 }
 export const getOrderDetailes = createAsyncThunk(
   "get/orderDetailes",
   async (orderId: string, { rejectWithValue }) => {
     try {
-      const getOrderData = await axiosInstance.get(`/order/${orderId}`);
+      const getOrderData = await axiosInstance.get(
+        `/getOrderDetails/${orderId}`
+      );
       const response = await getOrderData.data;
       console.log("orderDetails", response);
       return response;
@@ -46,7 +64,7 @@ export const getOrderDetailes = createAsyncThunk(
 interface initialStateType {
   isLoading: boolean;
   isError: boolean;
-  getOrderDetails: GetOrderDetailsTypes[] | null;
+  getOrderDetails: GetOrderDetailsTypes | null;
 }
 const initialState: initialStateType = {
   isLoading: false,
@@ -54,7 +72,7 @@ const initialState: initialStateType = {
   getOrderDetails: null,
 };
 const getOrderDetailsByOrderIdSlice = createSlice({
-  name: "getOrder",
+  name: "getOrderbyOrderId",
   initialState,
   reducers: {},
   extraReducers: (building) => {
@@ -66,7 +84,7 @@ const getOrderDetailsByOrderIdSlice = createSlice({
       .addCase(getOrderDetailes.fulfilled, (state, action) => {
         state.isError = false;
         state.isLoading = false;
-        state.getOrderDetails = action.payload;
+        state.getOrderDetails = action.payload.order;
       })
       .addCase(getOrderDetailes.rejected, (state) => {
         state.isError = true;

@@ -7,13 +7,16 @@ import { PostOrderDetailes } from "@/store/OrderDetailesSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import shippingValidationSchema from "@/utils/schema/shippingSchema";
 import { useFormik } from "formik";
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LuPackageCheck } from "react-icons/lu";
 import { toast } from "react-toastify";
 import mongoose from "mongoose";
 import { deleteCartByUserId } from "@/store/deleteCartByUserIdSlice";
 import { getCartByUserId } from "@/store/getCartSlice";
+import { useRouter } from "next/navigation";
 const ShippingPage = () => {
+  const [orderType, setOrderType] = useState<"buyNow" | "cart" | null>(null);
+
   const [showForm, setShowForm] = useState<boolean>(true);
   const [userId, setUserId] = useState<string | null>(null);
   const [isaddressSelectedId, setIsAddressSelectedId] = useState<string | null>(
@@ -24,6 +27,7 @@ const ShippingPage = () => {
   const [userAddressDetailes, setUserAddressDetailes] = useState<
     addressType[] | null
   >(null);
+  const router = useRouter();
   const addressDetails = useAppSelector((store) => store.getAddressById);
   const dispatch = useAppDispatch();
   const initialValues: addressType = {
@@ -38,76 +42,119 @@ const ShippingPage = () => {
   };
 
   useEffect(() => {
-    const userId = localStorage.getItem("userId");
-    if (!userId) {
-      return;
+    const orderData = localStorage.getItem("buyNowOrderData");
+    if (orderData) {
+      setOrderType("buyNow");
+      const data = orderData ? JSON.parse(orderData) : null;
+      if (data != null) {
+        setOrderData(data);
+      }
+    } else {
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        return;
+      }
+      setOrderType("cart");
+
+      setUserId(userId as string);
+      const orderData = localStorage.getItem("orderDetails");
+      const data = orderData ? JSON.parse(orderData) : null;
+      console.log(data);
+      data?.items?.forEach((item: OrderItem) => {
+        item.product.productId = new mongoose.Types.ObjectId(
+          item.product.productId
+        );
+      });
+      if (data) setOrderData(data);
     }
-    setUserId(userId as string);
-    const orderData = localStorage.getItem("orderDetails");
-    const data = orderData ? JSON.parse(orderData) : null;
-    console.log(data);
-    data.items.forEach((item: OrderItem) => {
-      item.product.productId = new mongoose.Types.ObjectId(
-        item.product.productId
-      );
-    });
-    if (data) setOrderData(data);
   }, []);
+  console.log(orderType);
+  console.log(orderData);
   const { handleBlur, handleChange, handleSubmit, errors, touched, values } =
     useFormik({
       initialValues,
       validationSchema: shippingValidationSchema,
       onSubmit: (value, action) => {
-        // console.log(value);
-        dispatch(orderProdductByAddress(value))
-          .then((res) => {
-            if (res.payload.success) {
-              if (orderData) {
+        if (orderType == "buyNow") {
+          console.log(orderType);
+          dispatch(orderProdductByAddress(value))
+            .then((res) => {
+              console.log(res);
+              if (res.payload.success) {
+                if (orderData === null) {
+                  toast.error("No order data found for Buy Now");
+                  return;
+                }
                 orderData.addressId = res.payload.data._id;
                 orderData.paymentMethod = value.paymentMethod;
-                dispatch(PostOrderDetailes(orderData))
-                  .then((res) => {
-                    // console.log(res.payload);
-                    if (res.payload.success) {
-                      toast.success(res.payload.message);
-
-                      console.log("user id is here", userId);
-                      if (userId)
-                        dispatch(deleteCartByUserId(userId)).then((res) => {
-                          console.log(res);
-                          if (res.payload.success) {
-                            dispatch(getCartByUserId())
-                              .then((res) => {
-                                console.log(res);
-                                if (res.payload.success) {
-                                  action.resetForm();
-                                } else {
-                                  toast.success(res.payload.message);
-                                }
-                              })
-                              .catch((error) => {
-                                toast.error(error.message);
-                              });
-                            // toast.success(res.payload.message);
-                          } else {
-                            toast.error(res.payload.message);
-                          }
-                        });
-                    } else {
-                      toast.error(res.payload.message);
-                    }
-                  })
-                  .catch((error) => {
-                    toast.error(error.message);
-                  });
+                dispatch(PostOrderDetailes(orderData)).then((res) => {
+                  console.log(res);
+                  if (res.payload.success) {
+                    console.log(res.payload.message);
+                    toast.success(res.payload.message);
+                    localStorage.removeItem("buyNowOrderData");
+                    setOrderData(null);
+                    action.resetForm();
+                    router.push("/user/order");
+                  } else {
+                    toast.error(res.payload.message);
+                  }
+                });
               }
-            } else {
-              toast.error(res.payload.message);
-            }
-          })
-          .catch((error) => {
-            toast.error(error.message);
-          });
+            })
+            .catch((error) => {
+              toast.error(error.message);
+            });
+        } else {
+          dispatch(orderProdductByAddress(value))
+            .then((res) => {
+              if (res.payload.success) {
+                if (orderData) {
+                  orderData.addressId = res.payload.data._id;
+                  orderData.paymentMethod = value.paymentMethod;
+                  dispatch(PostOrderDetailes(orderData))
+                    .then((resOrder) => {
+                      if (resOrder.payload.success) {
+                        toast.success(resOrder.payload.message);
+
+                        console.log("user id is here", userId);
+                        if (userId)
+                          dispatch(deleteCartByUserId(userId)).then((res) => {
+                            console.log(res);
+                            if (res.payload.success) {
+                              dispatch(getCartByUserId())
+                                .then((res) => {
+                                  if (resOrder.payload.success) {
+                                    setOrderData(null);
+                                    action.resetForm();
+                                    router.push("/user/order");
+                                  } else {
+                                    toast.success(res.payload.message);
+                                  }
+                                })
+                                .catch((error) => {
+                                  toast.error(error.message);
+                                });
+                            } else {
+                              toast.error(res.payload.message);
+                            }
+                          });
+                      } else {
+                        toast.error(res.payload.message);
+                      }
+                    })
+                    .catch((error) => {
+                      toast.error(error.message);
+                    });
+                }
+              } else {
+                toast.error(res.payload.message);
+              }
+            })
+            .catch((error) => {
+              toast.error(error.message);
+            });
+        }
       },
     });
   useEffect(() => {
@@ -118,9 +165,54 @@ const ShippingPage = () => {
       setUserAddressDetailes(addressDetails.addressDetails);
     }
   }, [addressDetails]);
-  // console.log(orderData);
+  const handleOrderUsingAddress = (id: string) => {
+    const address = userAddressDetailes?.find((address) => address._id === id);
+    console.log(address?._id);
+    if (orderData != null) {
+      orderData.paymentMethod = "UPI";
+      orderData.addressId = new mongoose.Types.ObjectId(address?._id);
+      if (orderType == "cart") {
+        dispatch(PostOrderDetailes(orderData)).then((resOrder) => {
+          console.log(resOrder);
+          if (resOrder.payload.success) {
+            dispatch(deleteCartByUserId(userId as string)).then((res) => {
+              if (res.payload.success) {
+                dispatch(getCartByUserId()).then((res) => {
+                  if (resOrder.payload.success) {
+                    setOrderData(null);
+                    router.push("/user/order");
+                  } else {
+                    toast.success(res.payload.message);
+                  }
+                });
+              } else {
+                toast.error(resOrder.payload.message);
+              }
+            });
+          } else {
+            toast.error(resOrder.payload.message);
+          }
+        });
+      }
+      if (orderType == "buyNow") {
+        dispatch(PostOrderDetailes(orderData)).then((res) => {
+          console.log(res);
+          if (res.payload.success) {
+            console.log(res.payload.message);
+            toast.success(res.payload.message);
+            localStorage.removeItem("buyNowOrderData");
+            setOrderData(null);
+            router.push("/user/order");
+          } else {
+            toast.error(res.payload.message);
+          }
+        });
+      }
+    }
+    console.log(orderData);
+  };
   return (
-    <div className="px-20">
+    <div className="px-20 mt-[112px]">
       <div className="font-semibold text-3xl flex gap-1 items-center ">
         {" "}
         <p className="w-16 h-1 bg-[#282C35] rounded-full "></p>
@@ -239,14 +331,14 @@ const ShippingPage = () => {
                 name="paymentMethod"
                 onChange={handleChange}
                 onBlur={handleBlur}
-                value={values.addressType}
+                value={values.paymentMethod}
                 className="border border-gray-300 px-4 py-2 outline-none rounded-lg"
               >
                 <option value="">Choose paymen method</option>
 
                 <option value="COD">COD</option>
                 <option value="UPI">UPI</option>
-                <option value="Card">Card</option>
+                <option value="CARD">Card</option>
               </select>
               {touched.paymentMethod && errors.paymentMethod && (
                 <p className="text-red-800 text-sm">{errors.paymentMethod}</p>
@@ -287,12 +379,14 @@ const ShippingPage = () => {
             >
               Order Placed
             </button>
-            <p
-              className="text-sm cursor-pointer underline pt-2 text-black font-Inter font-semibold"
-              onClick={() => setShowForm(false)}
-            >
-              Choose previous address
-            </p>
+            {userAddressDetailes?.length != 0 && (
+              <p
+                className="text-sm cursor-pointer underline pt-2 text-black font-Inter font-semibold"
+                onClick={() => setShowForm(false)}
+              >
+                Choose previous address
+              </p>
+            )}
           </div>
         </form>
       ) : (
@@ -344,6 +438,10 @@ const ShippingPage = () => {
             </div>
           ))}
           <button
+            onClick={() => {
+              if (isaddressSelectedId != null)
+                handleOrderUsingAddress(isaddressSelectedId);
+            }}
             className={`px-5 py-2 rounded-lg text-white ${
               isaddressSelectedId
                 ? "bg-gray-950 cursor-pointer"
