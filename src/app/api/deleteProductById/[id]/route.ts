@@ -27,7 +27,14 @@ export async function DELETE(
       message: "product deleted successfully",
       product,
     });
-  } catch (error: any) {
-    return NextResponse.json({ success: false, message: error.message, error });
+  } catch (error: unknown) {
+  let message = "Something went wrong";
+
+  if (error instanceof Error) {
+    message = error.message; // safe
   }
+
+  return NextResponse.json({ success: false, message });
+}
+
 }

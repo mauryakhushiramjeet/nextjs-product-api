@@ -7,7 +7,7 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: { id: string } }
 ): Promise<NextResponse> {
-  const id = params.id as string;
+  const { id } = params;
   try {
     await databaseConnection();
     await verifyToken(req);
@@ -25,7 +25,13 @@ export async function DELETE(
       success: true,
       message: "Cart deleted successfully.",
     });
-  } catch (error: any) {
-    return NextResponse.json({ success: false, message: error.message });
+  } catch (error: unknown) {
+    let message = "Something went wrong";
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    return NextResponse.json({ success: false, message });
   }
 }

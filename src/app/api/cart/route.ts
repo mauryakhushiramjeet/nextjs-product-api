@@ -61,7 +61,14 @@ export async function POST(req: NextRequest) {
       message: "Cart added successfully",
       data: cart,
     });
-  } catch (error: any) {
-    return NextResponse.json({ success: false, message: error.meesage });
+  } catch (error: unknown) {
+  let message = "Something went wrong";
+
+  if (error instanceof Error) {
+    message = error.message; // safe
   }
+
+  return NextResponse.json({ success: false, message });
+}
+
 }

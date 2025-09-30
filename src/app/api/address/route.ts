@@ -51,7 +51,14 @@ export async function POST(req: NextRequest) {
       message: "Order placed successfully.",
       data: addressDetails,
     });
-  } catch (error: any) {
-    console.log(error);
+  }catch (error: unknown) {
+  let message = "Something went wrong";
+
+  if (error instanceof Error) {
+    message = error.message; // safe
   }
+
+  return NextResponse.json({ success: false, message });
+}
+
 }

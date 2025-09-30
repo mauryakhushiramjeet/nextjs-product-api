@@ -1,49 +1,45 @@
 "use client";
-import axios from "axios";
 import Link from "next/link";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { RoleContext } from "../../../lib/contex/roleContext";
+import { useFormik } from "formik";
+import { loginValodationSchema } from "@/utils/schema/authSchema";
+import { useAppDispatch } from "@/store/store";
+import { loginUser } from "@/store/loginSlice";
 const LoginPage = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
   const router = useRouter();
   const { setRole } = useContext(RoleContext);
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const dispatch = useAppDispatch();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const userLogin = await axios.post(
-        "http://localhost:3000/api/login",
-        formData
-      );
-      const response = await userLogin.data;
-      // console.log(response);
-      if (response.success) {
-        toast.success(response.message);
-        localStorage.setItem("role", response.data.role);
-        setRole(response.data.role);
-        localStorage.setItem("userId", response.data.id);
-        const role = response.data.role;
-        if (role === "admin") router.push("/admin/dashboard");
-        else if (role === "user") router.push("/");
-      } else {
-        toast.error(response.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+
+  const initialValues = {
+    email: "",
+    password: "",
   };
+  const { handleBlur, handleChange, handleSubmit, errors, touched, values } =
+    useFormik({
+      initialValues,
+      validationSchema: loginValodationSchema,
+      onSubmit: (value, action) => {
+        dispatch(loginUser(value)).then((res) => {
+          console.log(res);
+          if (res.payload.success) {
+            toast.success(res.payload.message);
+            localStorage.setItem("role", res.payload.data.role);
+            setRole(res.payload.data.role);
+            const role = res.payload.data.role;
+            localStorage.setItem("userId",res.payload.data.id)
+            if (role === "admin") router.push("/admin/dashboard");
+            if (role === "user") router.push("/");
+            action.resetForm();
+          } else {
+            toast.error(res.payload.message);
+          }
+        });
+      },
+    });
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -57,12 +53,16 @@ const LoginPage = () => {
             <input
               type="email"
               name="email"
-              value={formData.email}
+              value={values.email}
               onChange={handleChange}
+              onBlur={handleBlur}
               placeholder="Enter your email"
               className="w-full p-2 border border-[#3185b9] rounded-lg focus:outline-none text-sm"
               required
             />
+            {touched.email && errors.email && (
+              <p className="text-red-800 text-sm">{errors.email}</p>
+            )}
           </div>
 
           {/* Password */}
@@ -71,12 +71,16 @@ const LoginPage = () => {
             <input
               type="password"
               name="password"
-              value={formData.password}
+              value={values.password}
               onChange={handleChange}
+              onBlur={handleBlur}
               placeholder="Enter your password"
               className="w-full p-2 border border-[#3185b9] rounded-lg focus:outline-none text-sm"
               required
             />
+            {touched.password && errors.password && (
+              <p className="text-red-800 text-sm">{errors.password}</p>
+            )}
           </div>
 
           {/* Submit Button */}

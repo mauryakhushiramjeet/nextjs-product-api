@@ -13,12 +13,19 @@ export async function GET(req: NextRequest) {
         message: "User id required",
       });
     }
-    const userInCart = await Cart.find({userId:id});
-    if (!userInCart) {
+    const userInCart = await Cart.find({ userId: id });
+    if (!userInCart || userInCart.length === 0) {
       return NextResponse.json({ success: false, message: "Cart is empty" });
     }
     return NextResponse.json({ success: true, data: userInCart });
-  } catch (error: any) {
-    return NextResponse.json({ success: false, message: error.message });
+  } catch (error: unknown) {
+  let message = "Something went wrong";
+
+  if (error instanceof Error) {
+    message = error.message; // safe
   }
+
+  return NextResponse.json({ success: false, message });
+}
+
 }

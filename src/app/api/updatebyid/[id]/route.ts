@@ -26,13 +26,13 @@ export async function PUT(
         message: "product is not found.",
       });
     }
-    const productData: any = {};
+    const productData: { [key: string]: string } = {};
     for (const [key, value] of formData.entries()) {
       if (key == "image" && value instanceof File) {
         const img = await ImageBasestring64(value);
         productData[key] = img;
       } else {
-        productData[key] = value;
+        productData[key] = typeof value === "string" ? value : String(value);
       }
     }
     console.log(productData, "product data is");
@@ -46,7 +46,13 @@ export async function PUT(
       message: "product updated",
       product,
     });
-  } catch (error: any) {
-    return NextResponse.json({ success: false, message: error.message });
+  } catch (error: unknown) {
+    let message = "Something went wrong";
+
+    if (error instanceof Error) {
+      message = error.message; // safe
+    }
+
+    return NextResponse.json({ success: false, message });
   }
 }

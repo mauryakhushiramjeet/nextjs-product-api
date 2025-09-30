@@ -35,7 +35,14 @@ export async function PUT(req: NextRequest) {
       message: "Status updated successfully",
       order: updatedOrder,
     });
-  } catch (error: any) {
-    return NextResponse.json({ succe: false, message: error.message });
+  }catch (error: unknown) {
+  let message = "Something went wrong";
+
+  if (error instanceof Error) {
+    message = error.message; // safe
   }
+
+  return NextResponse.json({ success: false, message });
+}
+
 }

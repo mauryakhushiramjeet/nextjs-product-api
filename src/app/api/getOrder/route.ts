@@ -19,8 +19,14 @@ export async function GET(req: NextRequest) {
       message: "OrderGated successfully",
       orderDetails,
     });
-  } catch (error: any) {
-    console.log(error);
-    return NextResponse.json({ success: false, message: error.message });
+  } catch (error: unknown) {
+  let message = "Something went wrong";
+
+  if (error instanceof Error) {
+    message = error.message; // safe
   }
+
+  return NextResponse.json({ success: false, message });
+}
+
 }

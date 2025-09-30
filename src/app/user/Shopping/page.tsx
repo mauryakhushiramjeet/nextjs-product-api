@@ -103,7 +103,7 @@ const ShoppingPage = () => {
   };
  
   return (
-    <div className="mt-6 w-full relative mt-[112px]">
+    <div className="w-full relative mt-[118px]">
       {isSidebarOpen ? (
         <div
           className={`bottom-0 transition-all shadow-2xl duration-500 translate-x-5 ease-in-out left-[-30px] flex flex-col gap-[20px]  fixed w-full max-w-[200px] py-6 rounded-tr-lg rounded-br-lg px-[30px] bg-[#FBFFFF]`}

@@ -14,7 +14,8 @@ import gertOrderReduce from "./getOrderSlice";
 import updatedStuasReducer from "./updateStatusSlice";
 import getOrderDetailsByOrderId from "./getOrderDetailsByOrderIdSlice";
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
-
+import loginReducer from "./loginSlice";
+import signupReducer from "./signupSlice";
 export const store = configureStore({
   reducer: {
     products: allProductReducer,
@@ -30,6 +31,8 @@ export const store = configureStore({
     getOrderDetails: gertOrderReduce,
     updatedStatus: updatedStuasReducer,
     getOrderbyOrderId: getOrderDetailsByOrderId,
+    login: loginReducer,
+    signup: signupReducer,
   },
 });
 

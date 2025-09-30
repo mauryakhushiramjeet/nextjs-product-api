@@ -6,7 +6,7 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: { id: string } }
 ): Promise<NextResponse> {
-  const { id } =params;
+  const { id } = params;
   console.log("here is uder id", id);
   try {
     await databaseConnection();
@@ -24,8 +24,13 @@ export async function DELETE(
       });
     }
     return NextResponse.json({ success: true, message: " successfully" });
-  } catch (error: any) {
-    console.log();
-    return NextResponse.json({ success: false, message: error.message });
+  } catch (error: unknown) {
+    let message = "Something went wrong";
+
+    if (error instanceof Error) {
+      message = error.message; // safe
+    }
+
+    return NextResponse.json({ success: false, message });
   }
 }
