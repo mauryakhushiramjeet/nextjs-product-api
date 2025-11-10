@@ -6,9 +6,9 @@ import { checkAdmin } from "@/lib/tokenmanage/checkAdmin";
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } =await params;
 
   const formData = await req.formData();
 

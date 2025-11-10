@@ -44,15 +44,18 @@ const ProductPage = () => {
 
   const productData = useAppSelector((store) => store.Product);
   const cartData = useAppSelector((store) => store.cartData);
+  const finalPrice = (productDetailes?.discountedPrice ??
+    productDetailes?.price) as number;
+
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { id } = useParams();
   useEffect(() => {
     if (typeof id === "string") {
       dispatch(getProductById(id));
-      dispatch(getAllProduct());
     }
   }, [dispatch, id]);
+  console.log(productData);
   useEffect(() => {
     if (productData) {
       if (!productData.isError && !productData.loading) {
@@ -60,6 +63,10 @@ const ProductPage = () => {
       }
     }
   }, [productData]);
+  console.log(productDetailes?.category);
+  useEffect(() => {
+    dispatch(getAllProduct({ category: productDetailes?.category }));
+  }, [id, productDetailes, dispatch]);
   useEffect(() => {
     if (
       getAllProductData &&
@@ -67,17 +74,13 @@ const ProductPage = () => {
       !getAllProductData.loading &&
       getAllProductData?.data?.product
     ) {
-      const categoryRelatedProduct = getAllProductData.data.product.filter(
-        (product) =>
-          product.category == productDetailes?.category &&
-          product._id != productDetailes._id
-      );
-      setProductRelated(categoryRelatedProduct);
+      setProductRelated(getAllProductData.data.product);
+      console.log(getAllProductData.data.product);
     }
   }, [getAllProductData, productDetailes]);
 
   const handleAddToCart = (productId: mongoose.Types.ObjectId) => {
-    console.log("btn clicked")
+    console.log("btn clicked");
     const userId = localStorage.getItem("userId");
     if (!userId || !productId) {
       return;
@@ -119,8 +122,9 @@ const ProductPage = () => {
     localStorage.setItem("buyNowOrderData", JSON.stringify(data));
     router.push("/user/shippingDetailes");
   };
+  console.log();
   if (cartData) {
-    console.log(cartData);
+    // console.log(cartData);
   }
   if (productData.loading) return <div>Loading...</div>;
   if (productData.isError) return <div>Something went wrong</div>;
@@ -143,9 +147,25 @@ const ProductPage = () => {
           <p className="text-[#1D2939] text-4xl  font-extrabold">
             {productDetailes?.name}
           </p>
-          <p className="text-green-500 font-semibold text-2xl">
-            {productDetailes?.price} <span>Rs</span>
-          </p>
+          {productDetailes?.discount ? (
+            <div className="flex gap-3 items-center">
+              <p className="text-gray-400  font-semibold text-xl relative">
+                {productDetailes?.price} Rs.00
+                <div className="w-full h-[1px] bg-gray-600 absolute rotate-[9deg] top-[15px]"></div>
+              </p>
+              <p className="text-green-500 font-semibold text-xl">
+                {productDetailes?.discountedPrice} Rs.00
+              </p>
+              <p className="text-2xl text-red-600 font-semibold">
+                Discount {productDetailes?.discount} %
+              </p>
+            </div>
+          ) : (
+            <p className="text-green-500 font-semibold text-2xl">
+              {productDetailes?.price} <span>Rs</span>
+            </p>
+          )}
+
           <p className="text-gray-500 text-xl mt-2 font-roboto">
             {productDetailes?.description}
           </p>
@@ -180,7 +200,9 @@ const ProductPage = () => {
                 handleBayNow(
                   productDetailes?._id as string,
                   productDetailes?.name as string,
-                  productDetailes?.price as number
+                  //   (productDetailes ? productDetailes.discountedPrice : productDetailes.price) as number
+                  // )
+                  finalPrice as number
                 )
               }
             >

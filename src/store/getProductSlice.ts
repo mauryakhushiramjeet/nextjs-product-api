@@ -1,22 +1,21 @@
 import { axiosInstance } from "@/axios/axiosInstance";
-import {
-  createAsyncThunk,
-  createSlice,
-} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-
-interface ProductType { 
-  _id:string,
+interface ProductType {
+  _id: string;
   name: string;
   description: string;
   price: number;
   image: string;
   category: string;
-  available:boolean
-  bestSeller:boolean
+  available: boolean;
+  bestSeller: boolean;
 }
 export interface ProductResponse {
   message: string;
+  limit?: number;
+  page?: number;
+  totalpages?: number;
   product: ProductType[];
 }
 interface initialSateShap {
@@ -31,12 +30,22 @@ const initialState: initialSateShap = {
 };
 export const getAllProduct = createAsyncThunk(
   "get/product",
-  async (_, { rejectWithValue }) => {
+  async (
+    {
+      page,
+      category,
+      bestSeller,
+    }: { page?: number; category?: string; bestSeller?: boolean },
+    { rejectWithValue }
+  ) => {
     try {
-      const getProduct = await axiosInstance.get("/getproduct");
+      const getProduct = await axiosInstance.get(
+        `/getproduct?page=${page}&category=${category || ""}&bestSeller=${
+          bestSeller || ""
+        }`
+      );
       const response = await getProduct.data;
-      // console.log(response.product)
-      return response
+      return response;
     } catch (error) {
       console.log(error);
       return rejectWithValue(error);

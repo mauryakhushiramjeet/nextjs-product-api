@@ -6,11 +6,11 @@ import { databaseConnection } from "@/lib/dbConfig";
 export async function POST(req: NextRequest) {
   const { email, password } = await req.json();
   try {
-    databaseConnection();
+    await databaseConnection();
     if (!email || !password) {
       return NextResponse.json({
         success: false,
-        mesasage: "Please fill all the field",
+        mesasage: "Please fill all the fields",
       });
     }
     const user = await User.findOne({ email });
@@ -40,16 +40,23 @@ export async function POST(req: NextRequest) {
       },
       token,
     });
-    response.cookies.set({ name: "token", value: token, maxAge: 2*24* 60 * 60 });
+    response.cookies.set({
+      name: "token",
+      value: token,
+      maxAge: 2 * 24 * 60 * 60,
+      // httpOnly: false,
+      // path: "/",
+      // sameSite: "none",
+      // secure: true,
+    });
     return response;
-  }catch (error: unknown) {
-  let message = "Something went wrong";
+  } catch (error: unknown) {
+    let message = "Something went wrong";
 
-  if (error instanceof Error) {
-    message = error.message; // safe
+    if (error instanceof Error) {
+      message = error.message; // safe
+    }
+
+    return NextResponse.json({ success: false, message });
   }
-
-  return NextResponse.json({ success: false, message });
-}
-
 }

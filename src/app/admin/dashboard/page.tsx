@@ -4,7 +4,10 @@ import { MdOutlineAddCircleOutline } from "react-icons/md";
 import { AiFillProduct } from "react-icons/ai";
 import AddProduct from "@/componentes/AddProduct";
 import ViewProduct from "@/componentes/ViewProduct";
+import { GrBarChart } from "react-icons/gr";
+
 import { useState } from "react";
+import CreateSale from "@/componentes/CreateSale";
 
 const AdminDashboard = () => {
   const [activePage, setActivePage] = useState<string>("ViewProduct");
@@ -19,6 +22,10 @@ const AdminDashboard = () => {
     {
       btn: "View Product",
       icons: <AiFillProduct size={20} />,
+    },
+    {
+      btn: "Create Sale",
+      icons: <GrBarChart size={20} />,
     },
   ];
   const handleEditedProductId = (id: string) => {
@@ -39,6 +46,9 @@ const AdminDashboard = () => {
       case "View Product":
         setActivePage("ViewProduct");
         break;
+      case "Create Sale":
+        setActivePage("CreateSale");
+        break;
       default:
         setActivePage("");
         break;
@@ -56,6 +66,8 @@ const AdminDashboard = () => {
         );
       case "ViewProduct":
         return <ViewProduct onEdite={handleEditedProductId} />;
+      case "CreateSale":
+        return <CreateSale />;
       default:
     }
   };

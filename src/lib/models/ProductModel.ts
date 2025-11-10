@@ -9,6 +9,9 @@ export interface ProductType {
   description: string;
   available?: boolean;
   bestSeller: boolean;
+  originalPrice?: number | null;
+  discount?: number | null;
+  discountedPrice?: number | null;
 }
 const productSchema = new Schema<ProductType>({
   image: {
@@ -38,7 +41,6 @@ const productSchema = new Schema<ProductType>({
     type: Boolean,
     required: true,
   },
- 
 });
 const Product = models.Product || mongoose.model("Product", productSchema);
 export default Product;

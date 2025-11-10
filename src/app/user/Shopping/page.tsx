@@ -14,6 +14,7 @@ const ShoppingPage = () => {
   const [searchText, setSearchText] = useState<string>("");
   const [filterText, setFilterText] = useState<string>("");
   const [filterCategory, setFilterCategory] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const [filterProducts, setFilterProducts] = useState<ProductType[] | null>(
     null
@@ -22,18 +23,24 @@ const ShoppingPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const productes = useAppSelector((store) => store.products);
+  const totalPages = productes.data?.totalpages || 1;
 
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
   useEffect(() => {
-    dispatch(getAllProduct());
-  }, [dispatch]);
+    setLoading(true);
+    dispatch(getAllProduct({ page: currentPage }));
+  }, [dispatch, currentPage]);
   useEffect(() => {
     if (productes && !productes.isError && !productes.loading) {
       setAllProductes(productes?.data?.product || []);
+      setCurrentPage(productes.data?.page || 1);
     }
+    setLoading(false);
   }, [productes]);
+  console.log(allproductes);
 
-  console.log(productes);
   const handleSearch = (text: string) => {
     if (text.trim() == "") {
       setFilterProducts(null);
@@ -45,8 +52,6 @@ const ShoppingPage = () => {
         product.name.toLowerCase().includes(text.toLowerCase())
       );
       setFilterProducts(filterProduct);
-      // setSearchText("");
-      console.log("all  product is", allproductes);
     }
   };
   useEffect(() => {
@@ -101,7 +106,7 @@ const ShoppingPage = () => {
       }
     }
   };
- 
+  console.log(filterProducts);
   return (
     <div className="w-full relative mt-[118px]">
       {isSidebarOpen ? (
@@ -131,7 +136,7 @@ const ShoppingPage = () => {
                       checked={
                         filterText === option && filterCategory === btn.category
                       }
-                      onClick={() => {
+                      onChange={() => {
                         setFilterText(option);
                         setFilterCategory(btn.category);
                         handleFilterProducts(option, btn.category);
@@ -156,7 +161,7 @@ const ShoppingPage = () => {
           {/* </div> */}
         </div>
       ) : (
-        <div className="fixed bottom-10 left-0  ">
+        <div className="fixed bottom-[15px] left-0  ">
           <button
             onClick={() => setIsSidebarOpen(true)}
             className="bg-gray-900 rounded-br-xl text-sm flex gap-1 items-center rounded-tr-xl cursor-pointer text-white px-4 py-2"
@@ -177,37 +182,113 @@ const ShoppingPage = () => {
           className="py-1 px-5 rounded-lg text-gray-500 bg-white outline-none ring-[3px] ring-[#84927a]/50 "
         />
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
-        {(filterProducts || allproductes).map((product, index) => (
-          <div
-            key={index}
-            onClick={() => router.push(`/user/product/${product._id}`)}
-            className={` bg-white rounded-xl p-3 flex flex-col shadow  gap-2 cursor-pointer`}
-          >
-            {typeof product.image == "string" && (
-              <Image
-                src={product.image}
-                height={200}
-                width={200}
-                className="rounded-xl h-[150px] sm:h-[200px] w-full object-cover"
-                alt={product.name || "product image"}
-              />
-            )}
-            <p className="text-gray-800 text-sm font-medium">{product.name}</p>
-            <div className="flex w-full justify-between">
-              <p className="text-gray-800 text-sm font-medium">
-                {product.price} <span className="font-medium">Rs.</span>
-              </p>
-              <p
-                className={`${
-                  product.available ? "text-green-600" : "text-red-600"
-                } text-sm font-medium`}
-              >
-                {product.available ? "Available" : "Out of Stock"}
+
+      {loading ? (
+        <div className="w-full flex items-center justify-center h-[400px] ">
+          <div className="border-[6px] border-dotted border-t-transparent animate-spin rounded-full h-10 w-10  border-blue-600/80"></div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 h-[400px] overflow-scroll">
+          {filterProducts && filterProducts.length === 0 ? (
+            <div className="col-span-full flex justify-center items-center h-full">
+              <p className="text-gray-500 text-lg font-medium">
+                No products found for this filter.
               </p>
             </div>
-          </div>
+          ) : (
+            (filterProducts || allproductes).map((product, index) => (
+              <div
+                key={index}
+                onClick={() => router.push(`/user/product/${product._id}`)}
+                className="bg-[#F5F6EF] shadow rounded-xl p-3 flex flex-col gap-2 cursor-pointer"
+              >
+                {typeof product.image === "string" && (
+                  <Image
+                    src={product.image}
+                    height={200}
+                    width={200}
+                    className="rounded-xl h-[300px] w-[400px] object-cover"
+                    alt={product.name || "product image"}
+                  />
+                )}
+                <div className="flex w-full justify-between">
+                  <p className="text-gray-800 text-sm font-medium">
+                    {product.name}
+                  </p>
+                  {product.discount && (
+                    <p className="text-red-600 font-medium text-lg">
+                      Discount {product.discount} %
+                    </p>
+                  )}
+                </div>
+                <div className="flex w-full justify-between">
+                  {product.discount ? (
+                    <div className="flex gap-2">
+                      <p className="text-gray-500 line-through">
+                        {product.price}
+                      </p>
+                      <p className="text-gray-900 font-medium">
+                        {product.discountedPrice}Rs.00
+                      </p>
+                    </div>
+                  ) : (
+                    <p className="text-gray-800 text-sm font-medium">
+                      {product.price} <span className="font-medium">Rs.</span>
+                    </p>
+                  )}
+
+                  <p
+                    className={`${
+                      product.available ? "text-green-600" : "text-red-600"
+                    } text-sm font-medium`}
+                  >
+                    {product.available ? "Available" : "Out of Stock"}
+                  </p>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      )}
+      <div className="flex items-center justify-center space-x-2 mt-4 sticky bottom-[11px]  backdrop-blur-md py-2 left-[25%] w-[50%] bg-[#84927a]/30 rounded-3xl">
+        {/* Prev Button */}
+        <button
+          onClick={() => setCurrentPage(currentPage - 1)}
+          disabled={currentPage === 1}
+          className={`px-3 py-1 rounded-md border bg-gray-200 ${
+            currentPage === 1
+              ? "cursor-default"
+              : "cursor-pointer hover:bg-blue-500 hover:text-white"
+          }`}
+        >
+          Prev
+        </button>
+        {pages.map((page) => (
+          <button
+            onClick={() => setCurrentPage(page)}
+            key={page}
+            className={`px-3 py-1 rounded-md border cursor-pointer  ${
+              page === currentPage
+                ? "bg-black/90 text-white"
+                : "bg-white text-black"
+            }  `}
+          >
+            {page}
+          </button>
         ))}
+
+        {/* Next Button */}
+        <button
+          onClick={() => setCurrentPage(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className={`px-3 py-1 rounded-md border bg-gray-200  ${
+            currentPage === totalPages
+              ? "cursor-default"
+              : "cursor-pointer hover:bg-blue-500 hover:text-white"
+          }`}
+        >
+          Next
+        </button>
       </div>
     </div>
   );

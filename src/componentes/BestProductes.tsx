@@ -10,18 +10,18 @@ const BestProductes = () => {
   const [allproductes, setAllProductes] = useState<ProductType[]>([]);
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const bestSeller = true;
   const productes = useAppSelector((store) => store.products);
 
   useEffect(() => {
-    dispatch(getAllProduct());
+    dispatch(getAllProduct({ bestSeller }));
   }, [dispatch]);
   useEffect(() => {
     if (productes && !productes.isError && !productes.loading) {
+      console.log(productes?.data?.product);
       setAllProductes(productes.data?.product || []);
     }
   }, [productes]);
-
-  // console.log(productes);
 
   return (
     <div className="mt-10">
@@ -48,11 +48,30 @@ const BestProductes = () => {
                 alt={product.name || "product image"}
               />
             )}
-            <p className="text-gray-800 text-sm font-medium">{product.name}</p>
             <div className="flex w-full justify-between">
               <p className="text-gray-800 text-sm font-medium">
-                {product.price} <span className="font-medium">Rs.</span>
+                {product.name}
               </p>
+              {product.discount && (
+                <p className="text-red-600 font-medium text-lg">
+                  Discount {product.discount} %
+                </p>
+              )}
+            </div>
+            <div className="flex w-full justify-between">
+              {product.discount ? (
+                <div className="flex gap-2">
+                  <p className="text-gray-500 line-through">{product.price}</p>
+                  <p className="text-gray-900 font-medium">
+                    {product.discountedPrice}Rs.00
+                  </p>
+                </div>
+              ) : (
+                <p className="text-gray-800 text-sm font-medium">
+                  {product.price} <span className="font-medium">Rs.</span>
+                </p>
+              )}
+
               <p
                 className={`${
                   product.available ? "text-green-600" : "text-red-600"

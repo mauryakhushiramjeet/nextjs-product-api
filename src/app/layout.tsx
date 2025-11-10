@@ -3,7 +3,7 @@ import "./globals.css";
 import { Providers } from "@/store/Providers";
 import Navbar from "@/componentes/Navbar";
 import { RoleProvider } from "@/lib/contex/roleContext";
-// import { ProductContextProvider } from "@/context/ProductContect";
+import Loader from "../../Loader";
 
 export default function RootLayout({
   children,
@@ -16,6 +16,7 @@ export default function RootLayout({
         <RoleProvider>
           <Providers>
             <Navbar />
+            <Loader/>
             {children}
             <ToastContainer position="top-right" autoClose={3000} />
           </Providers>

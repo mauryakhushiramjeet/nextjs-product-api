@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import { getCartByUserId } from "@/store/getCartSlice";
 import { RoleContext } from "@/lib/contex/roleContext";
 import Image from "next/image";
+import Cookies from "js-cookie";
 const Navbar = () => {
   const [showProfile, setShowProfile] = useState<boolean>(false);
   const count = useAppSelector((store) => store.getCartData.cartData);
@@ -52,6 +53,7 @@ const Navbar = () => {
     setRole(null);
     router.push("/login");
     setShowProfile(false);
+    Cookies.set("token", "");
   };
   useEffect(() => {
     dispatch(getCartByUserId());

@@ -16,23 +16,27 @@ interface OnEditType {
 const ViewProduct: React.FC<OnEditType> = ({ onEdite }) => {
   const [allproductes, setAllProductes] = useState<ProductType[] | null>(null);
   const [showModel, setShowModel] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const rededAllProduct = useAppSelector((store) => store.products);
+    const totalPages = rededAllProduct?.data?.totalpages || 1;
+
   const [deltedProductId, setDeletedProductId] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   //   console.log("this all products", rededAllProduct);
   useEffect(() => {
-    dispatch(getAllProduct());
-  }, []);
+    dispatch(getAllProduct({page:currentPage}));
+  }, [currentPage]);
   useEffect(() => {
     if (
       rededAllProduct &&
       !rededAllProduct.isError &&
       !rededAllProduct.loading
     ) {
+
       setAllProductes(rededAllProduct?.data?.product ?? null);
     }
   }, [rededAllProduct]);
-  //   console.log(allproductes);
+  console.log(totalPages)
   const handleModel = (id: string) => {
     if (id != null) {
       setShowModel(true);
@@ -46,7 +50,7 @@ const ViewProduct: React.FC<OnEditType> = ({ onEdite }) => {
           console.log(res);
           if (res.payload.success) {
             toast.success(res.payload.message);
-            dispatch(getAllProduct());
+            // dispatch(getAllProduct());
           } else {
             toast.success(res.payload.message);
           }
@@ -63,6 +67,7 @@ const ViewProduct: React.FC<OnEditType> = ({ onEdite }) => {
   const handleUpdateProduct = (id: string) => {
     onEdite(id);
   };
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
     <div className="">
@@ -141,6 +146,45 @@ const ViewProduct: React.FC<OnEditType> = ({ onEdite }) => {
             ))}
           </tbody>
         </table>
+        <div className="flex items-center justify-center space-x-2 mt-4 sticky bottom-[11px]  backdrop-blur-md py-2 left-[25%] w-[50%] bg-[#84927a]/30 rounded-3xl">
+        {/* Prev Button */}
+        <button
+          onClick={() => setCurrentPage(currentPage - 1)}
+          disabled={currentPage === 1}
+          className={`px-3 py-1 rounded-md border bg-gray-200 ${
+            currentPage === 1
+              ? "cursor-default"
+              : "cursor-pointer hover:bg-blue-500 hover:text-white"
+          }`}
+        >
+          Prev
+        </button>
+        {pages.map((page) => (
+          <button
+            onClick={() => setCurrentPage(page)}
+            key={page}
+            className={`px-3 py-1 rounded-md border cursor-pointer  ${
+              page === currentPage
+                ? "bg-black/90 text-white"
+                : "bg-white text-black"
+            }  `}
+          >
+            {page}
+          </button>
+        ))}
+
+        <button
+          onClick={() => setCurrentPage(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className={`px-3 py-1 rounded-md border bg-gray-200  ${
+            currentPage === totalPages
+              ? "cursor-default"
+              : "cursor-pointer hover:bg-blue-500 hover:text-white"
+          }`}
+        >
+          Next
+        </button>
+      </div>
       </div>
       {showModel && (
         <ConfirmPop

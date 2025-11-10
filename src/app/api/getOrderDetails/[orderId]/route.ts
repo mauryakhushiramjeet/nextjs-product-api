@@ -8,9 +8,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { orderId: string } }
+  { params }: { params: Promise<{orderId:string}> }
 ): Promise<NextResponse> {
-  const { orderId } = params;
+  const { orderId } =await params;
 
   try {
     await databaseConnection();

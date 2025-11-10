@@ -36,10 +36,13 @@ export async function POST(req: NextRequest) {
       message: "user signup successfully",
       user,
     });
-  } catch (error) {
-    return NextResponse.json({
-      success: false,
-      message: error.message || "Something went wrong in signup",
-    });
+  } catch (error: unknown) {
+  let message = "Something went wrong";
+
+  if (error instanceof Error) {
+    message = error.message; // safe
   }
+
+  return NextResponse.json({ success: false, message });
+}
 }

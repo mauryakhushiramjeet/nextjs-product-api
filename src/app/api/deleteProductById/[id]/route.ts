@@ -4,9 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{id:string}> }
 ): Promise<NextResponse> {
-  const { id } = params;
+  const { id } =await params;
   try {
     await databaseConnection();
     if (!id) {
@@ -15,6 +15,7 @@ export async function DELETE(
         mesage: "Product id is required",
       });
     }
+    // if()
     const product = await Product.findByIdAndDelete({ _id: id });
     if (!product) {
       return NextResponse.json({
