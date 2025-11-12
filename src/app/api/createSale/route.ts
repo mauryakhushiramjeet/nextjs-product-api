@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   const disccountPercentage = formData.get("disccountPercentage") as string;
 
   try {
-    if (!image || !name || !category || !disccountPercentage) {
+    if (!image || !name || !disccountPercentage) {
       return NextResponse.json({
         success: false,
         message: "All fileds are required",
@@ -41,7 +41,7 @@ const uploadResult: UploadApiResponse = await new Promise((resolve, reject) => {
     const saleCreated: SaleInterface = await Sale.create({
       image: uploadResult.secure_url,
       name,
-      category,
+      category:category?category:null,
       disccountPercentage,
       start: now,
       end: endDate,

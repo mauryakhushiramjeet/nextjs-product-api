@@ -12,17 +12,16 @@ const BestProductes = () => {
   const router = useRouter();
   const bestSeller = true;
   const productes = useAppSelector((store) => store.products);
-
+  const saleForAll = productes?.data?.forAll || false;
   useEffect(() => {
     dispatch(getAllProduct({ bestSeller }));
   }, [dispatch]);
   useEffect(() => {
     if (productes && !productes.isError && !productes.loading) {
-      console.log(productes?.data?.product);
       setAllProductes(productes.data?.product || []);
     }
   }, [productes]);
-
+  console.log(productes);
   return (
     <div className="mt-10">
       <div className="font-semibold text-3xl flex gap-1 items-center">
@@ -52,7 +51,7 @@ const BestProductes = () => {
               <p className="text-gray-800 text-sm font-medium">
                 {product.name}
               </p>
-              {product.discount && (
+              {product.discount && !saleForAll && (
                 <p className="text-red-600 font-medium text-lg">
                   Discount {product.discount} %
                 </p>

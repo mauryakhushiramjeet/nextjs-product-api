@@ -10,7 +10,6 @@ export async function GET(req: NextRequest) {
     const url = req.nextUrl;
     const pageParams = url.searchParams.get("page");
     const page = Number(pageParams) || 1;
-    console.log(page);
     const limit = 10;
     const category = url.searchParams.get("category");
     const bestSeller = url.searchParams.get("bestSeller");
@@ -33,13 +32,38 @@ export async function GET(req: NextRequest) {
         product,
       });
     }
+    if (sales.length > 0 && sales[0].category == "all productes") {
+      const productData = product.map((product) => {
+        const discount = sales[0]?.disccountPercentage || 0;
+        const discountedPrice = Math.floor(
+          product.price - (product.price * discount) / 100
+        );
+        return {
+          ...product.toObject(),
+          originalPrice: product.price,
+          discount,
+          discountedPrice,
+        };
+      });
+      return NextResponse.json({
+        success: true,
+        page,
+        limit,
+        totalpages,
+        forAll:true,
+        items: product.length,
+        message: "Products with sale discounts fetched successfully",
+        product: productData,
+      });
+    }
     const updatedProducts = product.map((product) => {
       const related_Product_of_SaleCategory = sales.find(
         (sale) => sale.category.toLowerCase() === product.category.toLowerCase()
       );
 
       if (related_Product_of_SaleCategory) {
-        const discount = sales[0].disccountPercentage || 0;
+        const discount =
+          related_Product_of_SaleCategory?.disccountPercentage || 0;
         const discountedPrice = Math.floor(
           product.price - (product.price * discount) / 100
         );

@@ -1,8 +1,8 @@
-import { OrderStatusType } from "@/app/admin/order/page";
+import { OrderStatusType } from "@/app/(main)/admin/order/page";
 import { axiosInstance } from "@/axios/axiosInstance";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-export  const UpdateStatusById = createAsyncThunk(
+export const UpdateStatusById = createAsyncThunk(
   "update/status",
   async (data: OrderStatusType, { rejectWithValue }) => {
     try {
@@ -11,7 +11,7 @@ export  const UpdateStatusById = createAsyncThunk(
         data
       );
       const response = updateStatus.data;
-    //   console.log(response);
+      //   console.log(response);
       return response;
     } catch (error) {
       console.log(error);

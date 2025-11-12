@@ -25,8 +25,8 @@ const ShoppingPage = () => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const productes = useAppSelector((store) => store.products);
-  const totalPages = productes.data?.totalpages || 1;
-
+  const totalPages: number = productes.data?.totalpages || 1;
+  const saleForAll: boolean = productes.data?.forAll || false;
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
   useEffect(() => {
     setLoading(true);
@@ -106,7 +106,7 @@ const ShoppingPage = () => {
       }
     }
   };
-  console.log(filterProducts);
+  console.log(saleForAll ? "Sale for all productes" : "sale for indivisualr");
   return (
     <div className="w-full relative mt-[118px]">
       {isSidebarOpen ? (
@@ -215,7 +215,7 @@ const ShoppingPage = () => {
                   <p className="text-gray-800 text-sm font-medium">
                     {product.name}
                   </p>
-                  {product.discount && (
+                  {product.discount && !saleForAll && (
                     <p className="text-red-600 font-medium text-lg">
                       Discount {product.discount} %
                     </p>

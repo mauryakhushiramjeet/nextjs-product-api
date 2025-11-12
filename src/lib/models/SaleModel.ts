@@ -25,7 +25,7 @@ const SaleSchema = new Schema<SaleInterface>({
   },
   category: {
     type: String,
-    required: true,
+    // required: true,
   },
   start: {
     type: Date,

@@ -28,6 +28,7 @@ const LoginPage = () => {
           if (res.payload.success) {
             toast.success(res.payload.message);
             localStorage.setItem("role", res.payload.data.role);
+            console.log(res.payload.data.role)
             setRole(res.payload.data.role);
             const role = res.payload.data.role;
             localStorage.setItem("userId",res.payload.data.id)

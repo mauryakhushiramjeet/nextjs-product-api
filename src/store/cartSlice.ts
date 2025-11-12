@@ -1,4 +1,4 @@
-import { cartDataType } from "@/app/user/product/[id]/page";
+import { cartDataType } from "@/app/(main)/user/product/[id]/page";
 import { axiosInstance } from "@/axios/axiosInstance";
 import { CartSchemaType } from "@/lib/models/CartModel";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -8,7 +8,7 @@ export const addProductInCart = createAsyncThunk(
   async (data: cartDataType, { rejectWithValue }) => {
     try {
       console.log(data);
-      const addcart = await axiosInstance.post("/cart", data );
+      const addcart = await axiosInstance.post("/cart", data);
       const response = await addcart.data;
       // console.log(response);
       return response;
@@ -20,7 +20,7 @@ export const addProductInCart = createAsyncThunk(
 interface initialStateType {
   isLoading: boolean;
   isError: boolean;
-  cartData: CartSchemaType []| null;
+  cartData: CartSchemaType[] | null;
 }
 const initialState: initialStateType = {
   isError: false,

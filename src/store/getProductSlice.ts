@@ -16,6 +16,7 @@ export interface ProductResponse {
   limit?: number;
   page?: number;
   totalpages?: number;
+  forAll?: boolean;
   product: ProductType[];
 }
 interface initialSateShap {
