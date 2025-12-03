@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { RoleContext } from "../../../lib/contex/roleContext";
@@ -8,32 +8,36 @@ import { useFormik } from "formik";
 import { loginValodationSchema } from "@/utils/schema/authSchema";
 import { useAppDispatch } from "@/store/store";
 import { loginUser } from "@/store/loginSlice";
+
 const LoginPage = () => {
   const router = useRouter();
-  const { setRole } = useContext(RoleContext);
   const dispatch = useAppDispatch();
+  const { setRole } = useContext(RoleContext);
 
+  const [loading, setLoading] = useState(false);
 
-  const initialValues = {
-    email: "",
-    password: "",
-  };
+  const initialValues = { email: "", password: "" };
+
   const { handleBlur, handleChange, handleSubmit, errors, touched, values } =
     useFormik({
       initialValues,
       validationSchema: loginValodationSchema,
       onSubmit: (value, action) => {
+        setLoading(true);
+
         dispatch(loginUser(value)).then((res) => {
-          console.log(res);
+          setLoading(false);
+
           if (res.payload.success) {
             toast.success(res.payload.message);
             localStorage.setItem("role", res.payload.data.role);
-            console.log(res.payload.data.role)
+            localStorage.setItem("userId", res.payload.data.id);
+
             setRole(res.payload.data.role);
-            const role = res.payload.data.role;
-            localStorage.setItem("userId",res.payload.data.id)
-            if (role === "admin") router.push("/admin/dashboard");
-            if (role === "user") router.push("/");
+
+            if (res.payload.data.role === "admin") router.push("/admin/dashboard");
+            if (res.payload.data.role === "user") router.push("/");
+
             action.resetForm();
           } else {
             toast.error(res.payload.message);
@@ -59,7 +63,6 @@ const LoginPage = () => {
               onBlur={handleBlur}
               placeholder="Enter your email"
               className="w-full p-2 border border-[#3185b9] rounded-lg focus:outline-none text-sm"
-              required
             />
             {touched.email && errors.email && (
               <p className="text-red-800 text-sm">{errors.email}</p>
@@ -77,7 +80,6 @@ const LoginPage = () => {
               onBlur={handleBlur}
               placeholder="Enter your password"
               className="w-full p-2 border border-[#3185b9] rounded-lg focus:outline-none text-sm"
-              required
             />
             {touched.password && errors.password && (
               <p className="text-red-800 text-sm">{errors.password}</p>
@@ -87,18 +89,16 @@ const LoginPage = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-[#154D71] text-white py-2 rounded-lg cursor-pointer hover:bg-[#1C6EA4] transition"
+            disabled={loading}
+            className="w-full bg-[#154D71] text-white py-2 rounded-lg cursor-pointer hover:bg-[#1C6EA4] transition disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            Login
+            {loading ? "Please wait..." : "Login"}
           </button>
         </form>
 
         <p className="text-center text-sm mt-4">
           Don’t have an account?{" "}
-          <Link
-            href="/signup"
-            className="text-[#154D71] font-semibold hover:underline"
-          >
+          <Link href="/signup" className="text-[#154D71] font-semibold hover:underline">
             Sign Up
           </Link>
         </p>

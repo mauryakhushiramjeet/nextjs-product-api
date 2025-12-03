@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { use, useEffect, useMemo, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { BiLoaderCircle } from "react-icons/bi";
@@ -7,24 +7,32 @@ import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 // import { } from "@/store/salesSlice";
 import { createSales, deleteSale, getSalesDetailes } from "@/store/salesSlice";
-import { SaleInterface } from "@/lib/models/SaleModel";
 import Image from "next/image";
+import { CategoryType, getCategory } from "@/store/categorySlice";
+import { SaleViewInterface } from "@/types";
+import { MdCancel } from "react-icons/md";
 
 interface SaleFormValues {
   name: string;
   image: File | null;
   disccountPercentage: number | "";
-  category: string;
+  categoryId: string[];
   start: string;
   end: string;
 }
 
 const CreateSale: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [salesData, setSalesData] = useState<SaleInterface[] | null>(null);
+  const [salesData, setSalesData] = useState<SaleViewInterface[] | null>(null);
+  const categoryStore = useAppSelector((store) => store.category);
+  const [categoryButtons, setCategoryButtons] = useState<CategoryType[] | null>(
+    null
+  );
+
   const [createSale, setCreateSale] = useState<boolean>(false);
   const salesDetails = useAppSelector((store) => store.sale);
   const dispatch = useAppDispatch();
+  console.log(salesDetails);
   useEffect(() => {
     dispatch(getSalesDetailes());
   }, []);
@@ -32,12 +40,11 @@ const CreateSale: React.FC = () => {
     setSalesData(salesDetails?.data);
   }, [salesDetails]);
 
-  console.log(salesData);
   const initialValues: SaleFormValues = {
     name: "",
     image: null,
     disccountPercentage: "",
-    category: "",
+    categoryId: [] as string[],
     start: "",
     end: "",
   };
@@ -49,7 +56,9 @@ const CreateSale: React.FC = () => {
       .required("Discount is required")
       .min(1, "Minimum 1%")
       .max(100, "Maximum 100%"),
-    category: Yup.string().required("Category is required"),
+    categoryId: Yup.array()
+      .min(1, "At least one category is required")
+      .required("Category is required"),
     start: Yup.date().required("Start date is required"),
     end: Yup.date()
       .required("End date is required")
@@ -77,23 +86,38 @@ const CreateSale: React.FC = () => {
           "disccountPercentage",
           String(formValues.disccountPercentage)
         );
-        formData.append("category", formValues.category);
+        values.categoryId.forEach((id) => {
+          formData.append("categoryId", id);
+        });
         formData.append("start", formValues.start);
         formData.append("end", formValues.end);
-        dispatch(createSales(formData));
-        toast.success("Sale created successfully!");
-        setCreateSale(false);
-        resetForm()
+        dispatch(createSales(formData))
+          .unwrap()
+          .then((res) => {
+            console.log(res);
+            if (res?.success) {
+              toast.success(res?.message);
+              resetForm();
+              setIsLoading(false);
+              setCreateSale(true);
+            } else {
+              toast.error(res?.message);
+              setIsLoading(false);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            setIsLoading(false);
+          });
       } catch (err) {
         console.log(err);
         toast.error("Something went wrong");
-      } finally {
         setIsLoading(false);
       }
     },
   });
   const handleSaleDeletion = (id: string) => {
-    console.log(id);
+    // console.log(id);
     dispatch(deleteSale(id as string))
       .unwrap()
       .then((res) => {
@@ -109,26 +133,50 @@ const CreateSale: React.FC = () => {
         console.log(error);
       });
   };
-  console.log(salesData);
+  useEffect(() => {
+    dispatch(getCategory());
+  }, []);
+
+  useEffect(() => {
+    if (categoryStore.category) {
+      setCategoryButtons(categoryStore.category);
+    }
+  }, [categoryStore.category]);
+  useEffect(() => {
+    if (categoryButtons) {
+      setFieldValue(
+        "categoryId",
+        categoryButtons.map((cat) => cat?._id)
+      );
+    }
+  }, [categoryButtons]);
+  const handleCategoryDelete = (id: string) => {
+    setCategoryButtons((prev) =>
+      prev ? prev.filter((cat) => cat._id !== id) : null
+    );
+    setFieldValue(
+      "categoryId",
+      values?.categoryId.filter((catId) => catId != id)
+    );
+  };
+
   return (
     <>
       <div className="flex items-center justify-between">
         <p className="text-2xl font-bold text-gray-800 mb-5">
           {!createSale ? "Sale" : "Create Sale"}
         </p>
-        {salesData &&
-          salesData[0]?.category != "all productes" &&
-          salesData.length > 0 && (
-            <button
-              className="px-3 py-2 bg-gray-600 text-white rounded-lg cursor-pointer"
-              onClick={() => setCreateSale((prev) => !prev)}
-            >
-              {" "}
-              {createSale ? "Show Sale" : "Create Sale"}
-            </button>
-          )}
+        {salesData && (
+          <button
+            className="px-3 py-2 bg-gray-600 text-white rounded-lg cursor-pointer"
+            onClick={() => setCreateSale((prev) => !prev)}
+          >
+            {" "}
+            {createSale ? "Show Sale" : "Create  "}
+          </button>
+        )}
       </div>
-      <div className="p-6 bg-gray-100 rounded-lg shadow-md max-w-3xl mx-auto">
+      <div className="p-3 bg-gray-100 rounded-lg shadow-md  mx-auto">
         {!createSale && salesData && salesData?.length > 0 ? (
           <>
             {salesDetails.isError == true && (
@@ -136,35 +184,52 @@ const CreateSale: React.FC = () => {
                 <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
               </div>
             )}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {(salesData || []).map((sale) => (
                 <div
                   key={sale._id}
-                  className="p-4 rounded-lg shadow-md bg-white flex flex-col items-center"
+                  className="px-5 py-4 rounded-xl shadow-lg bg-white flex flex-col items-start transition-transform"
                 >
-                  <Image
-                    src={sale.image as string}
-                    alt={sale.name}
-                    height={200}
-                    width={500}
-                    className="w-full h-48 object-cover rounded-lg mb-2"
-                  />
-                  <h2 className="text-lg font-bold">{sale.name}</h2>
-                  <p className="text-sm text-gray-600">{sale.category}</p>
-                  <p className="text-green-700 font-semibold">
+                  <div className="w-full h-48 relative mb-4">
+                    <Image
+                      src={sale.image as string}
+                      alt={sale.name}
+                      fill
+                      className="object-cover rounded-lg"
+                    />
+                  </div>
+
+                  <h2 className="text-xl font-semibold text-gray-800 mb-2">
+                    {sale.name}
+                  </h2>
+
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {sale?.categoryId?.map((cat) => (
+                      <span
+                        key={cat?._id}
+                        className="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full"
+                      >
+                        {cat?.categoryName}
+                      </span>
+                    ))}
+                  </div>
+
+                  <p className="text-green-700 font-semibold mb-1">
                     Discount: {sale.disccountPercentage}%
                   </p>
-                  <p className="text-gray-500 text-sm">
+
+                  <p className="text-gray-500 text-sm mb-1">
                     Start: {new Date(sale.start).toLocaleString()}
                   </p>
-                  <p className="text-gray-500 text-sm">
+                  <p className="text-gray-500 text-sm mb-3">
                     End: {new Date(sale.end).toLocaleString()}
                   </p>
+
                   <button
                     onClick={() => handleSaleDeletion(sale._id as string)}
-                    className="px-3 bg-red-700/90 mt-2 text-white cursor-pointer hover:bg-red-600/70 rounded-lg py-1 text-base"
+                    className="self-end px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-500 transition"
                   >
-                    Sale delete
+                    Delete
                   </button>
                 </div>
               ))}
@@ -232,29 +297,30 @@ const CreateSale: React.FC = () => {
                 )}
               </div>
 
-              {/* Category */}
               <div>
                 <label className="block mb-1 font-medium text-green-800">
                   Category
                 </label>
-                <select
-                  name="category"
-                  value={values.category}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className="border p-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-green-500"
-                >
-                  <option value="" disabled>
-                    Choose category
-                  </option>
-                  <option value="cloth">Cloth</option>
-                  <option value="makeup">Makeup</option>
-                  <option value="food">Food</option>
-                  <option value="jewellery">Jewellery</option>
-                  <option value="all productes">All Productes</option>
-                </select>
-                {touched.category && errors.category && (
-                  <p className="text-red-600 text-sm">{errors.category}</p>
+
+                <div className=" p-2 grid grid-cols-3 gap-5">
+                  {(categoryButtons || []).map((cat) => (
+                    <div
+                      key={cat?._id}
+                      className="capitalize border relative border-gray-400 p-1 text-center"
+                    >
+                      <p> {cat?.categoryName}</p>
+                      <button
+                        className="absolute top-[-10px] right-[-8px] text-gray-500 cursor-pointer"
+                        onClick={() => handleCategoryDelete(cat?._id as string)}
+                      >
+                        <MdCancel />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                {errors.categoryId && (
+                  <p className="text-red-600 text-sm">{errors.categoryId}</p>
                 )}
               </div>
 
@@ -297,7 +363,10 @@ const CreateSale: React.FC = () => {
               {/* Submit */}
               <button
                 type="submit"
-                className="flex items-center justify-center bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition"
+                disabled={isLoading}
+                className={`flex cursor-pointer items-center justify-center ${
+                  isLoading ? "bg-green-400 cursor-none" : "bg-green-600"
+                } bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition`}
               >
                 {isLoading ? (
                   <BiLoaderCircle size={25} className="animate-spin" />

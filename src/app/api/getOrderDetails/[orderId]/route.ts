@@ -15,7 +15,7 @@ export async function GET(
   try {
     await databaseConnection();
     await verifyToken(req);
-
+    
     const order = await Order.findById(orderId)
       .populate("userId", "name email",User)
       .populate("addressId", "phone address city state country addressType",Address)

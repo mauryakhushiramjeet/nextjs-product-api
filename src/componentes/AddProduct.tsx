@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useFormik } from "formik";
 import { ProductType } from "@/lib/models/ProductModel";
 import { addProductValidation } from "@/utils/schema/addProductSchema";
@@ -9,6 +9,7 @@ import { BiLoaderCircle } from "react-icons/bi";
 import { useState } from "react";
 import { getProductById } from "@/store/getProductByIdSlice";
 import { updateProductId } from "@/store/updateProductSlice";
+import { getCategory } from "@/store/categorySlice";
 interface productIdType {
   productId: string | null;
   setProductId: (id: null) => void;
@@ -19,16 +20,14 @@ const AddProduct: React.FC<productIdType> = ({ productId, setProductId }) => {
     image: null,
     name: "",
     price: "",
-    category: "",
+    categoryId: "",
     description: "",
     available: false,
     bestSeller: false,
   });
-  // console.log("product id is ", productId);
   const dispatch = useAppDispatch();
   const editedProduct = useAppSelector((store) => store.Product);
-  // const router = useRouter();
-
+  const categoryStore = useAppSelector((store) => store.category);
   const formData = new FormData();
 
   const {
@@ -52,7 +51,7 @@ const AddProduct: React.FC<productIdType> = ({ productId, setProductId }) => {
 
         formData.append("price", String(value.price));
         formData.append("description", value.description);
-        formData.append("category", value.category);
+        formData.append("categoryId", String(value.categoryId));
         formData.append("available", String(value.available));
 
         formData.append("bestSeller", String(value.bestSeller));
@@ -62,8 +61,8 @@ const AddProduct: React.FC<productIdType> = ({ productId, setProductId }) => {
               if (res.payload?.success) {
                 setIsLoading(false);
                 toast.success(res.payload.message);
+                console.log(res.payload);
                 action.resetForm();
-                setProductId(null);
               } else {
                 toast.error(res.payload.message);
                 setIsLoading(false);
@@ -75,15 +74,18 @@ const AddProduct: React.FC<productIdType> = ({ productId, setProductId }) => {
             });
         } else {
           dispatch(updateProductId({ id: productId, formData }))
+            .unwrap()
             .then((res) => {
               // console.log(res.payload);
               console.log("response is", res);
               if (res.payload?.success) {
-                toast.success(res.payload.message);
+                toast.success(res?.message);
                 action.resetForm();
-                // setU
+                setIsLoading(false);
+                setProductId(null);
               } else {
-                toast.error(res.payload.message);
+                toast.error(res?.message);
+                setIsLoading(false);
               }
             })
             .catch((error) => {
@@ -109,22 +111,16 @@ const AddProduct: React.FC<productIdType> = ({ productId, setProductId }) => {
       editedProduct.data != null
     ) {
       console.log(editedProduct);
-      const {
-        name,
-        available,
-        image,
-        bestSeller,
-        category,
-        description,
-        _id,
-        price,
-      } = editedProduct.data;
+      const { name, available, image, bestSeller, description, _id, price } =
+        editedProduct.data;
+      const { _id : categoryId } = editedProduct.data.categoryId;
+      console.log(categoryId);
       setInitialValues({
         name,
         available,
         image,
         bestSeller,
-        category,
+        categoryId,
         description,
         _id,
         price,
@@ -134,14 +130,27 @@ const AddProduct: React.FC<productIdType> = ({ productId, setProductId }) => {
         image: null,
         name: "",
         price: "",
-        category: "",
+        categoryId: "",
         description: "",
         available: false,
         bestSeller: false,
       });
     }
   }, [editedProduct?.data, productId]);
-  // console.log(values);
+  useEffect(() => {
+    dispatch(getCategory());
+  }, []);
+
+  const category = useMemo(() => {
+    if (
+      !categoryStore.isError &&
+      !categoryStore.isLoading &&
+      categoryStore.category
+    ) {
+      return categoryStore.category;
+    }
+  }, [categoryStore]);
+  console.log(editedProduct, "mjhkjhkjhl");
   return (
     <div className="">
       <h1 className="text-2xl font-bold mb-5">
@@ -288,8 +297,8 @@ const AddProduct: React.FC<productIdType> = ({ productId, setProductId }) => {
           </div>
           <div>
             <select
-              name="category"
-              value={values.category}
+              name="categoryId"
+              value={values?.categoryId as string}
               onBlur={handleBlur}
               onChange={handleChange}
               className="border border-green-600 px-3 py-2 outline-none rounded-lg text-sm"
@@ -297,13 +306,14 @@ const AddProduct: React.FC<productIdType> = ({ productId, setProductId }) => {
               <option value="" className="text-gray-500" disabled>
                 Choose product category
               </option>
-              <option value="cloth">Cloth</option>
-              <option value="makeup">Makeup</option>
-              <option value="food">Food</option>
-              <option value="jewellery">Jewellery</option>
+              {(category || []).map((cat) => (
+                <option value={cat?._id} key={cat?._id} className="uppercase">
+                  {cat?.categoryName}
+                </option>
+              ))}
             </select>
-            {touched.category && errors.category && (
-              <p className="mt-1 text-sm text-red-600">{errors.category}</p>
+            {touched.categoryId && errors.categoryId && (
+              <p className="mt-1 text-sm text-red-600">{errors.categoryId}</p>
             )}
           </div>
           <button

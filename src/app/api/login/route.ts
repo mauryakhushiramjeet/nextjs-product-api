@@ -41,14 +41,15 @@ export async function POST(req: NextRequest) {
       token,
     });
     response.cookies.set({
-      name: "token",
-      value: token,
-      maxAge: 2 * 24 * 60 * 60,
-      // httpOnly: false,
-      // path: "/",
-      // sameSite: "none",
-      // secure: true,
-    });
+  name: "token",
+  value: token,
+  maxAge: 2 * 24 * 60 * 60,
+  // httpOnly: false,
+  // path: "/",           
+  // sameSite: "none",   
+  // secure: true,       
+});
+
     return response;
   } catch (error: unknown) {
     let message = "Something went wrong";

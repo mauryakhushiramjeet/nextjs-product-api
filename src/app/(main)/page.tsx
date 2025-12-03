@@ -9,9 +9,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Pagination } from "swiper/modules";
+import { SaleViewInterface } from "@/types";
 
 const HomePage = () => {
-  const [saleData, setSaleData] = useState<SaleInterface[] | null>([]);
+  const [saleData, setSaleData] = useState<SaleViewInterface[] | null>([]);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const sale = useAppSelector((store) => store.sale);
@@ -43,16 +44,24 @@ const HomePage = () => {
   // }, [saleData, today]);
   console.log(sale);
   return (
-    <div className="mt-[117px]">
+    <div className="p-5">
       {saleData && saleData.length > 0 && (
         <Swiper modules={[Pagination]} spaceBetween={30}>
           {saleData.map((sale) => (
             <SwiperSlide key={sale._id}>
               <div className="relative w-full h-fit py-11 mb-8 overflow-hidden rounded-3xl bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 shadow-lg">
                 <div className="absolute max-w-[200px] top-4 left-0 lg:left-4 lg:bg-gradient-to-r from-red-600 to-orange-500 px-[10px] xl:px-6 py-3 rounded-2xl shadow-md">
-                  <p className="k text-yellow-200 text-base xl:text-xl font-bold animate-bounce">
-                    🎉 {sale?.disccountPercentage}% OFF on {sale?.category}
-                  </p>
+                  <div className="flex gap-2">
+                    {sale?.categoryId.map((cat) => (
+                      <p
+                        key={cat?._id}
+                        className="k text-yellow-200 text-base xl:text-xl font-bold animate-bounce"
+                      >
+                        🎉 {sale?.disccountPercentage}% OFF on{" "}
+                        {cat?.categoryName}
+                      </p>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row justify-center items-center h-full px-10 sm:ml-[89px]">

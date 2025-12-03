@@ -3,20 +3,20 @@ import * as jose from "jose";
 import User from "../models/UserModel";
 export const verifyToken = async (req: NextRequest) => {
   const authHeader = req.headers.get("Authorization");
+  // console.log(authHeader,",header token") 
   const token = authHeader?.split(" ")[1];
-  console.log(token);
   if (!token) throw new Error("token not exist, please login");
 
   const { payload: tokenDecoded } = await jose.jwtVerify(
     token,
     new TextEncoder().encode(process.env.JWT_KEY as string)
   );
-
   const { id, role } = tokenDecoded;
 
   const user = await User.findById(id);
   if (!user) {
     throw new Error("user not authorized, please login");
   }
+  // console.log(user)
   return { user, role, id };
 };

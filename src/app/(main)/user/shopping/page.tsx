@@ -8,17 +8,18 @@ import { FaFilter } from "react-icons/fa6";
 
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { ProductViewType } from "@/types";
 
 const ShoppingPage = () => {
-  const [allproductes, setAllProductes] = useState<ProductType[]>([]);
+  const [allproductes, setAllProductes] = useState<ProductViewType[]>([]);
   const [searchText, setSearchText] = useState<string>("");
   const [filterText, setFilterText] = useState<string>("");
   const [filterCategory, setFilterCategory] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const [filterProducts, setFilterProducts] = useState<ProductType[] | null>(
-    null
-  );
+  const [filterProducts, setFilterProducts] = useState<
+    ProductViewType[] | null
+  >(null);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const dispatch = useAppDispatch();
@@ -86,9 +87,9 @@ const ShoppingPage = () => {
       setFilterProducts(filteredPrice);
     } else if (category == "Category") {
       console.log(category);
-      // if (option == "Cloth") {
       const filterCloth = allproductes.filter(
-        (productes) => productes.category == option.toLowerCase()
+        (productes) =>
+          productes.categoryId?.categoryName === option.toLowerCase()
       );
       setFilterProducts(filterCloth);
       // }
@@ -108,7 +109,7 @@ const ShoppingPage = () => {
   };
   console.log(saleForAll ? "Sale for all productes" : "sale for indivisualr");
   return (
-    <div className="w-full relative mt-[118px]">
+    <div className="w-full relative p-5">
       {isSidebarOpen ? (
         <div
           className={`bottom-0 transition-all shadow-2xl duration-500 translate-x-5 ease-in-out left-[-30px] flex flex-col gap-[20px]  fixed w-full max-w-[200px] py-6 rounded-tr-lg rounded-br-lg px-[30px] bg-[#FBFFFF]`}
@@ -188,7 +189,7 @@ const ShoppingPage = () => {
           <div className="border-[6px] border-dotted border-t-transparent animate-spin rounded-full h-10 w-10  border-blue-600/80"></div>
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 h-[400px] overflow-scroll">
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
           {filterProducts && filterProducts.length === 0 ? (
             <div className="col-span-full flex justify-center items-center h-full">
               <p className="text-gray-500 text-lg font-medium">

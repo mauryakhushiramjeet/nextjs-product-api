@@ -14,6 +14,7 @@ export async function GET(req: NextRequest) {
     } else {
       orderDetails = await Order.find({ userId: id });
     }
+    console.log(orderDetails)
     return NextResponse.json({
       success: true,
       message: "OrderGated successfully",

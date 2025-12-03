@@ -1,15 +1,19 @@
 import Sale from "@/lib/models/SaleModel";
 import { NextResponse } from "next/server";
+import mongoose from "mongoose";
 
 export async function GET() {
   try {
-    const salesDetails = await Sale.find();
-    return NextResponse.json({ success: true, salesDetails });
+    const sales = await Sale.find().populate({
+      path: "categoryId",
+      select: "categoryName _id",
+      model: "Category",
+    });
+    return NextResponse.json({ success: true, sales });
   } catch (error: unknown) {
-    let message = "Something went wrong";
-    if (error instanceof Error) {
-      message = error.message;
-    }
-    return NextResponse.json({ success: false, message: message });
+    return NextResponse.json({
+      success: false,
+      message: error instanceof Error ? error.message : "Something went wrong",
+    });
   }
 }

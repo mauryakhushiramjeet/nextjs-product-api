@@ -19,7 +19,10 @@ export async function GET(
       });
     }
 
-    const product = await Product.findById({ _id: id });
+    const product = await Product.findById({ _id: id }).populate(
+      "categoryId",
+      "_id categoryName"
+    );
     if (!product) {
       return NextResponse.json({
         success: true,
@@ -36,8 +39,10 @@ export async function GET(
     }
 
     let updatedProduct = product.toObject();
-    const related_Product_of_SaleCategory = sales.find(
-      (sale) => sale.category.toLowerCase() === product.category.toLowerCase()
+    const related_Product_of_SaleCategory = sales.find((sale) =>
+      sale?.categoryId.some(
+        (catId) => catId.toString() === product.categoryId?._id.toString()
+      )
     );
     if (related_Product_of_SaleCategory) {
       const discount = related_Product_of_SaleCategory.disccountPercentage || 0;

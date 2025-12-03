@@ -4,9 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: Promise<{id:string}> }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
-  const { id } =await params;
+  const { id } = await params;
   try {
     await databaseConnection();
     if (!id) {
@@ -29,13 +29,12 @@ export async function DELETE(
       product,
     });
   } catch (error: unknown) {
-  let message = "Something went wrong";
+    let message = "Something went wrong";
 
-  if (error instanceof Error) {
-    message = error.message; // safe
+    if (error instanceof Error) {
+      message = error.message; // safe
+    }
+
+    return NextResponse.json({ success: false, message });
   }
-
-  return NextResponse.json({ success: false, message });
-}
-
 }

@@ -9,22 +9,25 @@ import Image from "next/image";
 import ConfirmPop from "./ConfirmPop";
 import { productDeleteById } from "@/store/deleteProductByIdSlice";
 import { toast } from "react-toastify";
+import { ProductViewType } from "@/types";
 
 interface OnEditType {
   onEdite: (id: string) => void;
 }
 const ViewProduct: React.FC<OnEditType> = ({ onEdite }) => {
-  const [allproductes, setAllProductes] = useState<ProductType[] | null>(null);
+  const [allproductes, setAllProductes] = useState<ProductViewType[] | null>(
+    null
+  );
   const [showModel, setShowModel] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const rededAllProduct = useAppSelector((store) => store.products);
-    const totalPages = rededAllProduct?.data?.totalpages || 1;
+  const totalPages = rededAllProduct?.data?.totalpages || 1;
 
   const [deltedProductId, setDeletedProductId] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   //   console.log("this all products", rededAllProduct);
   useEffect(() => {
-    dispatch(getAllProduct({page:currentPage}));
+    dispatch(getAllProduct({ page: currentPage }));
   }, [currentPage]);
   useEffect(() => {
     if (
@@ -32,11 +35,10 @@ const ViewProduct: React.FC<OnEditType> = ({ onEdite }) => {
       !rededAllProduct.isError &&
       !rededAllProduct.loading
     ) {
-
       setAllProductes(rededAllProduct?.data?.product ?? null);
     }
   }, [rededAllProduct]);
-  console.log(totalPages)
+  // console.log(rededAllProduct, "jhjkhkjh");
   const handleModel = (id: string) => {
     if (id != null) {
       setShowModel(true);
@@ -70,10 +72,10 @@ const ViewProduct: React.FC<OnEditType> = ({ onEdite }) => {
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
-    <div className="">
+    <div className="h-full">
       <h1 className="text-2xl font-bold mb-5">Product List</h1>
 
-      <div className="rounded-lg shadow-md h-[436px] overflow-y-scroll  bg-gray-100 w-full">
+<div className="rounded-lg shadow-md h-full overflow-y-auto bg-gray-100 w-full">
         <table className="w-full ">
           <thead className="text-left  w-full">
             <tr className="bg-green-600 text-white rounded-4xl w-full ">
@@ -109,7 +111,9 @@ const ViewProduct: React.FC<OnEditType> = ({ onEdite }) => {
                 </td>
 
                 <td className="px-6 py-4 capitalize">{product?.name}</td>
-                <td className="px-6 py-4 capitalize">{product?.category}</td>
+                <td className="px-6 py-4 capitalize">
+                  {product?.categoryId.categoryName}
+                </td>
                 <td className="px-6 py-4 capitalize">{product?.price} Rs</td>
                 <td
                   className={`className="px-6 py-4" ${
@@ -146,45 +150,45 @@ const ViewProduct: React.FC<OnEditType> = ({ onEdite }) => {
             ))}
           </tbody>
         </table>
-        <div className="flex items-center justify-center space-x-2 mt-4 sticky bottom-[11px]  backdrop-blur-md py-2 left-[25%] w-[50%] bg-[#84927a]/30 rounded-3xl">
-        {/* Prev Button */}
-        <button
-          onClick={() => setCurrentPage(currentPage - 1)}
-          disabled={currentPage === 1}
-          className={`px-3 py-1 rounded-md border bg-gray-200 ${
-            currentPage === 1
-              ? "cursor-default"
-              : "cursor-pointer hover:bg-blue-500 hover:text-white"
-          }`}
-        >
-          Prev
-        </button>
-        {pages.map((page) => (
+        <div className="flex items-center justify-center space-x-2 mt-4 sticky bottom-[40px]  backdrop-blur-md py-2  bg-[#84927a]/30 rounded-3xl">
+          {/* Prev Button */}
           <button
-            onClick={() => setCurrentPage(page)}
-            key={page}
-            className={`px-3 py-1 rounded-md border cursor-pointer  ${
-              page === currentPage
-                ? "bg-black/90 text-white"
-                : "bg-white text-black"
-            }  `}
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 1}
+            className={`px-3 py-1 rounded-md border bg-gray-200 ${
+              currentPage === 1
+                ? "cursor-default"
+                : "cursor-pointer hover:bg-blue-500 hover:text-white"
+            }`}
           >
-            {page}
+            Prev
           </button>
-        ))}
+          {pages.map((page) => (
+            <button
+              onClick={() => setCurrentPage(page)}
+              key={page}
+              className={`px-3 py-1 rounded-md border cursor-pointer  ${
+                page === currentPage
+                  ? "bg-black/90 text-white"
+                  : "bg-white text-black"
+              }  `}
+            >
+              {page}
+            </button>
+          ))}
 
-        <button
-          onClick={() => setCurrentPage(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className={`px-3 py-1 rounded-md border bg-gray-200  ${
-            currentPage === totalPages
-              ? "cursor-default"
-              : "cursor-pointer hover:bg-blue-500 hover:text-white"
-          }`}
-        >
-          Next
-        </button>
-      </div>
+          <button
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className={`px-3 py-1 rounded-md border bg-gray-200  ${
+              currentPage === totalPages
+                ? "cursor-default"
+                : "cursor-pointer hover:bg-blue-500 hover:text-white"
+            }`}
+          >
+            Next
+          </button>
+        </div>
       </div>
       {showModel && (
         <ConfirmPop

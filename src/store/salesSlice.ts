@@ -1,10 +1,11 @@
 import { axiosInstance } from "@/axios/axiosInstance";
 import { SaleInterface } from "@/lib/models/SaleModel";
+import { SaleViewInterface } from "@/types";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 interface initialStateType {
   loading: boolean;
   isError: boolean;
-  data: SaleInterface[] | null;
+  data: SaleViewInterface[] | null;
 }
 const initialState: initialStateType = {
   loading: false,
@@ -17,6 +18,7 @@ export const deteleSale = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.delete("/deleteSale");
+
       return await response.data;
     } catch (error) {
       return rejectWithValue(error);
@@ -34,6 +36,7 @@ export const createSales = createAsyncThunk(
           "Content-Type": "form-data",
         },
       });
+      console.log(response.data, "created sale log in");
       return await response.data;
     } catch (error) {
       console.log(error);
@@ -59,8 +62,8 @@ export const getSalesDetailes = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get("/getSaleDetails");
-      console.log(response.data.salesDetails);
-      return response.data.salesDetails;
+      // console.log(response.data.sales, "in response of function");
+      return response.data.sales;
     } catch (error) {
       console.log(error);
       return rejectWithValue(error);

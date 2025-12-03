@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
   const description = FormData.get("description") as string;
   const bestSeller = FormData.get("bestSeller") as string;
   const available = FormData.get("available") as string;
-  const category = FormData.get("category") as string;
+  const categoryId = FormData.get("categoryId") as string;
 
   try {
     await databaseConnection();
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
     if (
       !image ||
       !price ||
-      !category ||
+      !categoryId ||
       !name ||
       !description ||
       !bestSeller ||
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
           name,
           bestSeller,
           description,
-          category,
+          categoryId,
           price,
           available,
         },
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
       image: basestring64,
       name,
       price: priceData,
-      category,
+      categoryId,
       bestSeller,
       description,
       available,

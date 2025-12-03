@@ -1,8 +1,6 @@
 import { databaseConnection } from "@/lib/dbConfig";
 import Product from "@/lib/models/ProductModel";
 import Sale from "@/lib/models/SaleModel";
-import { verifyToken } from "@/lib/tokenmanage/verifyToken";
-import { promises } from "dns";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -11,15 +9,19 @@ export async function GET(req: NextRequest) {
     const pageParams = url.searchParams.get("page");
     const page = Number(pageParams) || 1;
     const limit = 10;
-    const category = url.searchParams.get("category");
+    const categoryId = url.searchParams.get("categoryId");
     const bestSeller = url.searchParams.get("bestSeller");
     await databaseConnection();
     const offset = (page - 1) * limit;
     const totalProducts = await Product.countDocuments({});
     const totalpages = Math.ceil(totalProducts / limit);
-    let product = await Product.find({}).skip(offset).limit(limit);
-    if (category && category != null) {
-      product = await Product.find({ category: category });
+    let product = await Product.find({})
+      .populate("categoryId", "_id categoryName")
+      .skip(offset)
+      .limit(limit);
+
+    if (categoryId && categoryId != null) {
+      product = await Product.find({ categoryId: categoryId });
     } else if (bestSeller && bestSeller != null) {
       product = await Product.find({ bestSeller: true });
     }
@@ -32,33 +34,12 @@ export async function GET(req: NextRequest) {
         product,
       });
     }
-    if (sales.length > 0 && sales[0].category == "all productes") {
-      const productData = product.map((product) => {
-        const discount = sales[0]?.disccountPercentage || 0;
-        const discountedPrice = Math.floor(
-          product.price - (product.price * discount) / 100
-        );
-        return {
-          ...product.toObject(),
-          originalPrice: product.price,
-          discount,
-          discountedPrice,
-        };
-      });
-      return NextResponse.json({
-        success: true,
-        page,
-        limit,
-        totalpages,
-        forAll:true,
-        items: product.length,
-        message: "Products with sale discounts fetched successfully",
-        product: productData,
-      });
-    }
+
     const updatedProducts = product.map((product) => {
-      const related_Product_of_SaleCategory = sales.find(
-        (sale) => sale.category.toLowerCase() === product.category.toLowerCase()
+      const related_Product_of_SaleCategory = sales.find((sale) =>
+        sale.categoryId.some(
+          (catId) => catId.toString() === product.categoryId._id.toString()
+        )
       );
 
       if (related_Product_of_SaleCategory) {

@@ -46,7 +46,7 @@ const Navbar = () => {
   };
 
   // };
-  console.log(role);
+  // console.log(role);
   const router = useRouter();
   const handleLogout = () => {
     localStorage.removeItem("role");
@@ -64,12 +64,12 @@ const Navbar = () => {
     console.log("localstorage role", role);
     setRole(role);
   }, []);
-  console.log(role);
+  // console.log(role);
   if (!role) return;
   const menuItems = MENU_MAP[role] || [];
   return (
     <>
-      <div className=" my-5 px-5 flex fixed top-[-21px] z-50 right-[2px] justify-between w-full bg-gray-50 border border-[#FDFEF9] text-black shadow rounded-md  ">
+      <header className="px-5 flex sticky top-0 z-50 right-[2px] justify-between w-full bg-gray-50 border border-[#FDFEF9] text-black shadow rounded-md  ">
         <div>
           <Image
             src="/images/logok.png"
@@ -124,7 +124,7 @@ const Navbar = () => {
             )}
           </div>
         </div>
-      </div>
+      </header>
     </>
   );
 };

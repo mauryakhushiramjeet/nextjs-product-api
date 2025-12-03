@@ -2,10 +2,10 @@ import { models, Schema } from "mongoose";
 import mongoose from "mongoose";
 export interface ProductType {
   _id?: string;
-  image: null | File | string;
+  image: null | string;
   name: string;
   price: number | string;
-  category: string;
+  categoryId:string|mongoose.Types.ObjectId;
   description: string;
   available?: boolean;
   bestSeller: boolean;
@@ -30,9 +30,10 @@ const productSchema = new Schema<ProductType>({
     type: Boolean,
     required: true,
   },
-  category: {
-    type: String,
-    enum: ["cloth", "food", "makeup", "jewellery"],
+  categoryId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+    require: true,
   },
   description: {
     type: String,

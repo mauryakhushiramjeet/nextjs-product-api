@@ -1,4 +1,5 @@
 import { axiosInstance } from "@/axios/axiosInstance";
+import { ProductViewType } from "@/types";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 interface ProductType {
   _id: string;
@@ -6,14 +7,14 @@ interface ProductType {
   description: string;
   price: number;
   image: string;
-  category: string;
+  categoryId: string;
   available: boolean;
   bestSeller: boolean;
 }
 interface initialSateShap {
   loading: boolean;
   isError: boolean;
-  data: ProductType | null;
+  data: ProductViewType | null;
 }
 const initialState: initialSateShap = {
   loading: false,

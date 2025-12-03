@@ -17,6 +17,7 @@ import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 import loginReducer from "./loginSlice";
 import signupReducer from "./signupSlice";
 import saleReducer from "./salesSlice"
+import categoryReducer from "./categorySlice"
 export const store = configureStore({
   reducer: {
     products: allProductReducer,
@@ -34,7 +35,8 @@ export const store = configureStore({
     getOrderbyOrderId: getOrderDetailsByOrderId,
     login: loginReducer,
     signup: signupReducer,
-    sale:saleReducer
+    sale:saleReducer,
+    category:categoryReducer
   },
 });
 

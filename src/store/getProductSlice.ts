@@ -1,4 +1,5 @@
 import { axiosInstance } from "@/axios/axiosInstance";
+import { ProductViewType } from "@/types";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface ProductType {
@@ -17,7 +18,7 @@ export interface ProductResponse {
   page?: number;
   totalpages?: number;
   forAll?: boolean;
-  product: ProductType[];
+  product: ProductViewType[];
 }
 interface initialSateShap {
   loading: boolean;
@@ -34,14 +35,14 @@ export const getAllProduct = createAsyncThunk(
   async (
     {
       page,
-      category,
+      categoryId,
       bestSeller,
-    }: { page?: number; category?: string; bestSeller?: boolean },
+    }: { page?: number; categoryId?: string; bestSeller?: boolean },
     { rejectWithValue }
   ) => {
     try {
       const getProduct = await axiosInstance.get(
-        `/getproduct?page=${page}&category=${category || ""}&bestSeller=${
+        `/getproduct?page=${page}&categoryId=${categoryId || ""}&bestSeller=${
           bestSeller || ""
         }`
       );

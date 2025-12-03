@@ -74,8 +74,8 @@ const AdminDashboard = () => {
 
   // console.log("admon dashbord editedproduct is is here", editedProductId);
   return (
-    <div className="flex bg-gray-100 mt-[112px]">
-      <div className="w-60 bg-[#F7F7F5] shadow-lg flex flex-col p-5 h-[500px]">
+    <div className="flex bg-gray-100 h-[calc(100vh-92px)] overflow-hidden">
+      <div className="w-60 bg-[#F7F7F5] shadow-lg flex flex-col p-5  h-full">
         <div className="flex flex-col items-center mb-3 w-fit p-2">
           <Image src="/images/pngtree.png" alt="logo" height={50} width={60} />
           <p className="text-gray-400 text-sm mt-2">Main Menu</p>
@@ -96,7 +96,7 @@ const AdminDashboard = () => {
           ))}
         </div>
       </div>
-      <div className="flex-1 px-10 pb-5 bg-white ">{renderPage()}</div>
+      <div className="w-full h-full px-10 pb-5 bg-white ">{renderPage()}</div>
     </div>
   );
 };

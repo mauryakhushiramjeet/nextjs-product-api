@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import mongoose from "mongoose";
 
 import { getCartByUserId } from "@/store/getCartSlice";
+import { ProductViewType } from "@/types";
 
 type OrderItemType = {
   product: {
@@ -34,12 +35,11 @@ export interface cartDataType {
   quantityQuery?: boolean;
 }
 const ProductPage = () => {
-  const [productDetailes, setProductDetailes] = useState<ProductType | null>(
-    null
-  );
-  const [productRelated, setProductRelated] = useState<ProductType[] | null>(
-    null
-  );
+  const [productDetailes, setProductDetailes] =
+    useState<ProductViewType | null>(null);
+  const [productRelated, setProductRelated] = useState<
+    ProductViewType[] | null
+  >(null);
   const getAllProductData = useAppSelector((store) => store.products);
 
   const productData = useAppSelector((store) => store.Product);
@@ -63,9 +63,8 @@ const ProductPage = () => {
       }
     }
   }, [productData]);
-  console.log(productDetailes?.category);
   useEffect(() => {
-    dispatch(getAllProduct({ category: productDetailes?.category }));
+    dispatch(getAllProduct({ categoryId: productDetailes?.categoryId?._id }));
   }, [id, productDetailes, dispatch]);
   useEffect(() => {
     if (

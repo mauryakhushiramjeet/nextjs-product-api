@@ -7,7 +7,7 @@ export const addProductValidation = Yup.object({
     .matches(/^[0-9]+$/, "Phone number must contain only digits")
     .min(1)
     .required(),
-  category: Yup.string().required(),
+  categoryId: Yup.string().required("Category is required."),
   available: Yup.boolean().required(),
   bestSeller: Yup.boolean().required(),
 });

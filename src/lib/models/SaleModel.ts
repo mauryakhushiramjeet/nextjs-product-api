@@ -5,7 +5,7 @@ export interface SaleInterface {
   name: string;
   disccountPercentage: number;
   image: string | File;
-  category: string | null;
+  categoryId:mongoose.Schema.Types.ObjectId[];
   start: Date;
   end: Date;
 }
@@ -23,10 +23,13 @@ const SaleSchema = new Schema<SaleInterface>({
     type: String,
     required: true,
   },
-  category: {
-    type: String,
-    // required: true,
-  },
+  categoryId: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
+    },
+  ],
   start: {
     type: Date,
   },
