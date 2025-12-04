@@ -1,4 +1,4 @@
-import mongoose, { Schema,models } from "mongoose";
+import mongoose, { Schema, models } from "mongoose";
 
 interface CategoryType {
   id?: string;
@@ -13,5 +13,5 @@ const CategorySchema = new Schema<CategoryType>(
   },
   { timestamps: true }
 );
-const Category = models.Category || mongoose.model("Category", CategorySchema);
+const Category = mongoose.models.Category || mongoose.model("Category", CategorySchema);
 export default Category;

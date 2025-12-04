@@ -3,6 +3,7 @@ import Product, { ProductType } from "@/lib/models/ProductModel";
 import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "../../../../lib/tokenmanage/verifyToken";
 import Sale from "@/lib/models/SaleModel";
+import mongoose from "mongoose";
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -41,7 +42,7 @@ export async function GET(
     let updatedProduct = product.toObject();
     const related_Product_of_SaleCategory = sales.find((sale) =>
       sale?.categoryId.some(
-        (catId) => catId.toString() === product.categoryId?._id.toString()
+        (catId:{ _id: mongoose.Schema.Types.ObjectId }) => catId.toString() === product.categoryId?._id.toString()
       )
     );
     if (related_Product_of_SaleCategory) {

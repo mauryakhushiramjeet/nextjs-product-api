@@ -5,7 +5,7 @@ export interface ProductType {
   image: null | string;
   name: string;
   price: number | string;
-  categoryId:string|mongoose.Types.ObjectId;
+  categoryId: string | mongoose.Types.ObjectId;
   description: string;
   available?: boolean;
   bestSeller: boolean;
@@ -33,7 +33,7 @@ const productSchema = new Schema<ProductType>({
   categoryId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Category",
-    require: true,
+    required: true,
   },
   description: {
     type: String,

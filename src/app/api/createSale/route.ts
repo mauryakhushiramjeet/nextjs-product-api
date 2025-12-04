@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
 
       if (sale) {
         const matched = sale.categoryId.find(
-          (cat) => cat._id.toString() === id
+          (cat: { _id: mongoose.Schema.Types.ObjectId }) => cat._id.toString() === id
         );
 
         if (matched) {

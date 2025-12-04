@@ -2,6 +2,8 @@ import { databaseConnection } from "@/lib/dbConfig";
 import Product from "@/lib/models/ProductModel";
 import Sale from "@/lib/models/SaleModel";
 import { NextRequest, NextResponse } from "next/server";
+import Category from "@/lib/models/CategoryModel";
+import mongoose from "mongoose";
 
 export async function GET(req: NextRequest) {
   try {
@@ -16,7 +18,7 @@ export async function GET(req: NextRequest) {
     const totalProducts = await Product.countDocuments({});
     const totalpages = Math.ceil(totalProducts / limit);
     let product = await Product.find({})
-      .populate("categoryId", "_id categoryName")
+      .populate("categoryId", "_id categoryName",Category)
       .skip(offset)
       .limit(limit);
 
@@ -38,7 +40,7 @@ export async function GET(req: NextRequest) {
     const updatedProducts = product.map((product) => {
       const related_Product_of_SaleCategory = sales.find((sale) =>
         sale.categoryId.some(
-          (catId) => catId.toString() === product.categoryId._id.toString()
+          (catId :{ _id: mongoose.Schema.Types.ObjectId }) => catId.toString() === product.categoryId._id.toString()
         )
       );
 

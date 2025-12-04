@@ -2,12 +2,14 @@
 import { ProductType } from "@/lib/models/ProductModel";
 import { getAllProduct } from "@/store/getProductSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
+import { ProductViewType } from "@/types";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import HeadingComponent from "./HeadingComponent";
 
 const BestProductes = () => {
-  const [allproductes, setAllProductes] = useState<ProductType[]>([]);
+  const [allproductes, setAllProductes] = useState<ProductViewType[]>([]);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const bestSeller = true;
@@ -24,11 +26,7 @@ const BestProductes = () => {
   console.log(productes);
   return (
     <div className="mt-10">
-      <div className="font-semibold text-3xl flex gap-1 items-center">
-        {" "}
-        <p className="w-16 h-1 rounded-full bg-black"></p>
-        <p className="">Bestseller productes</p>
-      </div>
+      <HeadingComponent heading="Bestseller productes"/>
       <div className="grid grid-cols-4 gap-5 mt-5">
         {(allproductes || []).map((product, index) => (
           <div

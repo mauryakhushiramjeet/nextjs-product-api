@@ -15,6 +15,7 @@ import mongoose from "mongoose";
 
 import { getCartByUserId } from "@/store/getCartSlice";
 import { ProductViewType } from "@/types";
+import HeadingComponent from "@/componentes/HeadingComponent";
 
 type OrderItemType = {
   product: {
@@ -211,11 +212,7 @@ const ProductPage = () => {
         </div>
       </div>
       <div className="my-6">
-        <div className="font-semibold text-3xl flex gap-1 items-center">
-          {" "}
-          <p className="w-16 h-1 rounded-full bg-black"></p>
-          <p className="">Recommende productes</p>
-        </div>
+        <HeadingComponent heading="Recommende productes"/>
         <div className="mt-5">
           <Swiper slidesPerView={4} spaceBetween={10}>
             {(productRelated || []).map((relatedProduct) => (

@@ -14,6 +14,7 @@ import mongoose from "mongoose";
 import { deleteCartByUserId } from "@/store/deleteCartByUserIdSlice";
 import { getCartByUserId } from "@/store/getCartSlice";
 import { useRouter } from "next/navigation";
+import HeadingComponent from "@/componentes/HeadingComponent";
 const ShippingPage = () => {
   const [orderType, setOrderType] = useState<"buyNow" | "cart" | null>(null);
 
@@ -216,12 +217,7 @@ const ShippingPage = () => {
       <div className="font-semibold text-3xl flex gap-1 items-center ">
         {" "}
         <p className="w-16 h-1 bg-[#282C35] rounded-full "></p>
-        <div className="text-3xl font-extrabold font-Inter text-[#282C35] flex items-center gap-1">
-          <p>Shipping Detailes</p>{" "}
-          <p>
-            <LuPackageCheck />
-          </p>
-        </div>{" "}
+        <HeadingComponent heading="Shipping Detailes" icons={<LuPackageCheck/>}/>
       </div>
       {showForm ? (
         <form

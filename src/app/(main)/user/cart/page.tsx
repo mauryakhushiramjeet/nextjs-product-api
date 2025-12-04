@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { cartDataType } from "../product/[id]/page";
 import { addProductInCart } from "@/store/cartSlice";
 import mongoose from "mongoose";
+import HeadingComponent from "@/componentes/HeadingComponent";
 
 const CartPage = () => {
   const [cartProductDetailes, setCartProductDetailes] = useState<
@@ -138,12 +139,7 @@ const CartPage = () => {
           <div className="font-semibold text-3xl flex gap-1 items-center ">
             {" "}
             <p className="w-16 h-1 bg-[#282C35] rounded-full "></p>
-            <div className="text-3xl font-extrabold font-Inter text-[#282C35] flex items-center gap-1">
-              <p>Shopping Cart</p>{" "}
-              <p>
-                <IoBagHandleOutline />
-              </p>
-            </div>{" "}
+            <HeadingComponent heading="Shopping Cart" icons={<IoBagHandleOutline/>}/>
           </div>
           <div className="flex w-full gap-10 mt-[21px] ">
             {" "}

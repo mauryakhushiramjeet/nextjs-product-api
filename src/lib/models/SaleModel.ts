@@ -1,4 +1,5 @@
 import mongoose, { models, Schema } from "mongoose";
+import Category from "@/lib/models/CategoryModel";
 
 export interface SaleInterface {
   _id?: string;

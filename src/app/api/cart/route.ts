@@ -40,12 +40,7 @@ export async function POST(req: NextRequest) {
       finalPrice = discountedPrice;
       existProduct.price = finalPrice;
     }
-    // console.log(
-    //   related_Product_of_SaleCategory,
-    //   "is here and its price after abstracting discrount is ",
-    //   finalPrice,
-    //   related_Product_of_SaleCategory.disccountPercentage
-    // );
+   
     if (!existProduct.available) {
       return NextResponse.json({
         success: false,

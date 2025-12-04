@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { LuLoaderCircle } from "react-icons/lu";
 import { UpdateStatusById } from "@/store/updateStatusSlice";
 import { toast } from "react-toastify";
+import HeadingComponent from "@/componentes/HeadingComponent";
 
 export type OrderStatusType = {
   id: string;
@@ -71,12 +72,7 @@ const AdminOrderpage = () => {
     <div className="w-full font-Inter mt-[112px]">
       {order && order.length > 0 ? (
         <div className="px-10">
-          <div className="font-semibold text-3xl flex gap-1 items-center ">
-            <p className="w-16 h-1 bg-[#282C35] rounded-full "></p>
-            <div className="text-3xl font-extrabold font-Inter text-[#282C35] flex items-center gap-1">
-              <p>Orders</p>
-            </div>
-          </div>
+          <HeadingComponent heading="Orders" />
 
           <div className="bg-gray-100 p-5 w-full mt-6 shadow">
             <p className="text-lg text-gray-700">
