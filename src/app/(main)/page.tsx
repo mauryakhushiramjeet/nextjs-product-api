@@ -50,47 +50,51 @@ const HomePage = () => {
           {saleData.map((sale) => (
             <SwiperSlide key={sale._id}>
               <div className="relative w-full h-fit py-11 mb-8 overflow-hidden rounded-3xl bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 shadow-lg">
-                <div className="absolute max-w-[200px] top-4 left-0 lg:left-4 lg:bg-gradient-to-r from-red-600 to-orange-500 px-[10px] xl:px-6 py-3 rounded-2xl shadow-md">
-                  <div className="flex gap-2">
+                <div className={` hidden sm:block absolute  top-4 right-4 bg-gradient-to-r from-red-600 to-orange-500 px-[10px] xl:px-6 py-3 rounded-2xl shadow-md`}>
+                  <div className="flex flex-col items-center gap-1 md:gap-2 2xl:gap-3">
+                    <p className="text-white text-base sm:text-xl xl:text-2xl 2xl:text-3xl">
+                      {sale?.disccountPercentage}% OFF on{" "}
+                    </p>
                     {sale?.categoryId.map((cat) => (
                       <p
                         key={cat?._id}
-                        className="k text-yellow-200 text-base xl:text-xl font-bold animate-bounce"
+                        className="k text-yellow-200 text-sm sm:text-xl 2xl:text-2xl 2xl:font-bold animate-bounce"
                       >
-                        🎉 {sale?.disccountPercentage}% OFF on{" "}
                         {cat?.categoryName}
                       </p>
                     ))}
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row justify-center items-center h-full px-10 sm:ml-[89px]">
-                  <div className="flex items-center sm:items-start flex-col gap-y-2">
-                    <p className="text-xl lg:text-[26px] xl:text-4xl font-bold text-white drop-shadow-lg tracking-wide capitalize">
+                <div className="flex justify-start gap-10 items-center h-full px-4 xs:px-10 ">
+                  <div className="flex items-start flex-col gap-y-2">
+                    <p className="text-xl xs:text-2xl 2xl:text-6xl font-bold text-white drop-shadow-lg tracking-wide capitalize">
                       {sale?.name}
                     </p>
-                    <p className="text-gray-300 text-base lg:text-lg">
+                    <div className={`flex sm:hidden items-center gap-1 md:gap-2 2xl:gap-3`}>
+                      <p className="text-red-600 text-base sm:text-xl xl:text-2xl 2xl:text-3xl">
+                        {sale?.disccountPercentage}% OFF on{" "}
+                      </p>
+                      {sale?.categoryId.map((cat) => (
+                        <p
+                          key={cat?._id}
+                          className=" text-yellow-200 text-sm sm:text-xl 2xl:text-2xl 2xl:font-bold"
+                        >
+                          {cat?.categoryName}
+                        </p>
+                      ))}
+                    </div>
+                    <p className="text-gray-300 text-base md:text-xl 2xl:text-2xl">
                       Grab your favorite items before the offer ends!
                     </p>
                     <button
                       onClick={() => router.push("/user/shopping")}
-                      className="mt-2 w-fit px-6 py-2 bg-amber-500 cursor-pointer hover:bg-amber-400 text-black font-semibold rounded-lg shadow-md transition-transform hover:scale-105"
+                      className="mt-2 text-lg md:text-xl 2xl:text-2xl w-fit px-6 md:px-8 py-2 bg-amber-500 cursor-pointer hover:bg-amber-400 text-black font-semibold rounded-lg shadow-md transition-transform hover:scale-105"
                     >
                       Shop Now
                     </button>
                   </div>
-                  <div className="hidden sm:flex items-center gap-1">
-                    <p className="text-3xl xl:text-5xl animate-pulse">
-                      {/* <LuPartyPopper size={40} color="yellow" /> */}
-                      🎉
-                    </p>
-                    <p className="rotate-[276deg] text-3xl xl:text-5xl animate-pulse">
-                      {/* <LuPartyPopper size={40} color="yellow" /> */}
-                      🎉
-                    </p>
-                  </div>
 
-                  {/* Right Image Section */}
                   {sale?.image && (
                     <div className="relative">
                       <Image
@@ -98,10 +102,8 @@ const HomePage = () => {
                         alt="sale-image"
                         height={180}
                         width={180}
-                        className="rounded-xl aspect-[19/12]  border border-gray-600 hover:scale-105 transition-transform duration-300 sm:w-[200px] shadow-2xl"
+                        className="rounded-xl hidden lg:block w-[250px] 2xl:w-[365px]  border border-gray-600 hover:scale-105 transition-transform duration-300 shadow-2xl"
                       />
-                      {/* Glow effect */}
-                      <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-transparent via-white/10 to-transparent blur-md"></div>
                     </div>
                   )}
                 </div>
@@ -113,12 +115,12 @@ const HomePage = () => {
       <div className="bg-hero2 bg-cover bg-center h-[400px] rounded-lg relative flex justify-center items-center">
         <div className="absolute inset-0 bg-white/30 z-10"></div>
         <div className="relative z-20  p-5 flex flex-col items-center">
-          <p className="font-bold text-gray-800 text-4xl relative z-50">
+          <p className="font-bold text-center text-gray-800 text-xl xs:text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl relative z-50">
             Welcome to our , self care
           </p>
           <button
             onClick={() => router.push("/user/shopping")}
-            className="px-6 py-2 mt-5 bg-gray-900 cursor-pointer  text-amber-100 text-base rounded-lg"
+            className="px-6 lg:px-8 py-2 mt-5 bg-gray-900 cursor-pointer  text-amber-100 text-base xs:text-lg lg:text-[22px] 2xl:text-3xl rounded-lg"
           >
             Get started
           </button>

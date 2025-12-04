@@ -5,7 +5,7 @@ import Image from "next/image";
 const AboutPage = () => {
   return (
     <div className="min-h-screen p-5 flex flex-col items-center ">
-      <div className="max-w-4xl bg-white shadow-md rounded-lg p-8 flex flex-col items-center gap-6">
+      <div className="max-w-4xl bg-white sm:shadow-md rounded-lg sm:p-8 flex flex-col items-center gap-6">
         {/* Image at the top */}
         <div className="w-full flex justify-center">
           <Image

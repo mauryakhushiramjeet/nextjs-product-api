@@ -6,7 +6,7 @@ interface HeadingType {
 }
 const HeadingComponent: React.FC<HeadingType> = ({ heading, icons }) => {
   return (
-    <div className="text-3xl font-extrabold font-Inter text-[#282C35] flex items-center gap-1">
+    <div className="text-xl md:text-2xl: xl:text-3xl 2xl:text-4xl font-extrabold font-Inter text-[#282C35] flex items-center gap-1">
       {" "}
       <p className="w-16 h-1 rounded-full bg-black"></p>
       <p className="">{heading}</p>
