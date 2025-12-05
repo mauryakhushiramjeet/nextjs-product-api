@@ -37,7 +37,7 @@ const OrderDetailesapge = () => {
     );
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-4 mt-[112px]">
+    <div className="min-h-screen bg-gray-100 py-10 px-4">
       <div className="max-w-3xl mx-auto space-y-8">
         <div className="bg-gradient-to-r from-blue-500 to-purple-500 text-white p-6 rounded-2xl shadow-lg flex justify-between items-center">
           <div>
@@ -95,7 +95,7 @@ const OrderDetailesapge = () => {
         </div>
 
         {/* Items Card */}
-        <div className="bg-white shadow-md rounded-2xl p-6 mt-[112px]">
+        <div className="bg-white shadow-md rounded-2xl p-6">
           <h2 className="text-xl font-semibold border-b pb-2 mb-4">Items</h2>
           <div className="divide-y divide-gray-200">
             <div className=" flex flex-col gap-1">

@@ -112,7 +112,7 @@ const ShoppingPage = () => {
         {" "}
         {isSidebarOpen ? (
           <div
-            className={`bottom-0 transition-all shadow-2xl duration-500 translate-x-5 ease-in-out left-[-30px] flex flex-col gap-[20px]  fixed w-full max-w-[200px] py-6 rounded-tr-lg rounded-br-lg px-[30px] bg-[#FBFFFF]`}
+            className={`sm:bottom-0 transition-all shadow-2xl duration-500 translate-x-5 ease-in-out left-[-30px] flex flex-col gap-3 lg:gap-[20px]  fixed w-full max-w-[200px] py-[5px] lg:py-6 rounded-tr-lg rounded-br-lg px-[30px] bg-[#FBFFFF]`}
           >
             <div
               className="absolute top-1 right-1 w-fit  p-1 cursor-pointer text-white font-bold bg-black/50 rounded-full"
@@ -124,8 +124,8 @@ const ShoppingPage = () => {
             </div>
             {filterButtons.map((btn, index) => (
               <div key={index} className="w-full">
-                <p className="font-semibold text-lg">{btn.category}</p>
-                <div className="flex flex-col gap-2  w-full mt-3">
+                <p className="font-semibold text-base lg:text-lg">{btn.category}</p>
+                <div className="flex flex-col gap-1 lg:gap-2  w-full mt-1 lg:mt-3">
                   {btn.options.map((option) => (
                     <div
                       key={option}
@@ -162,7 +162,7 @@ const ShoppingPage = () => {
             </button>
           </div>
         ) : (
-          <div className="fixed bottom-[50px] left-0  ">
+          <div className="fixed bottom-20 sm:bottom-[58px] md:bottom-[50px] left-0  ">
             <button
               onClick={() => setIsSidebarOpen(true)}
               className="bg-gray-900 rounded-br-xl text-sm flex gap-1 items-center rounded-tr-xl cursor-pointer text-white px-4 py-2"
@@ -172,8 +172,8 @@ const ShoppingPage = () => {
           </div>
         )}
       </div>
-      <div className="flex items-center justify-end gap-40 mb-5 ">
-        <p className="text-center  font-semibold text-4xl italic text-[#84927a]">
+      <div className="flex flex-col sm:flex-row gap-5 sm:gap-0 items-center justify-between  mb-5 ">
+        <p className="text-center font-semibold text-2xl lg:text-4xl italic text-[#84927a]">
           Bestseller productes
         </p>
         <input
@@ -212,12 +212,12 @@ const ShoppingPage = () => {
           )}
         </div>
       )}
-      <div className="flex items-center justify-center">
-        <div className="flex items-center justify-center  space-x-2 mt-4 bottom-[11px]  backdrop-blur-md py-2 left-[25%] w-full md:w-[50%] bg-[#84927a]/30 rounded-3xl">
+      <div className="flex items-center justify-center text-sm xl:text-base 2xl:text-xl">
+        <div className="flex items-center justify-center  space-x-2 mt-8 md:mt-4 bottom-[11px]  backdrop-blur-md py-2 left-[25%] w-full sm:w-[50%] bg-[#84927a]/30 rounded-3xl">
           <button
             onClick={() => setCurrentPage(currentPage - 1)}
             disabled={currentPage === 1}
-            className={`px-3 py-1 rounded-md border bg-gray-200 ${
+            className={`px-[10px] 2xl:px-3 py-1 rounded-md border bg-gray-200 ${
               currentPage === 1
                 ? "cursor-default"
                 : "cursor-pointer hover:bg-blue-500 hover:text-white"
@@ -229,7 +229,7 @@ const ShoppingPage = () => {
             <button
               onClick={() => setCurrentPage(page)}
               key={page}
-              className={`px-3 py-1 rounded-md border cursor-pointer  ${
+              className={`px-[10px] 2xl:px-3 py-1 rounded-md border cursor-pointer  ${
                 page === currentPage
                   ? "bg-black/90 text-white"
                   : "bg-white text-black"
@@ -243,7 +243,7 @@ const ShoppingPage = () => {
           <button
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className={`px-3 py-1 rounded-md border bg-gray-200  ${
+            className={`px-[10px] 2xl:px-3 py-1 rounded-md border bg-gray-200  ${
               currentPage === totalPages
                 ? "cursor-default"
                 : "cursor-pointer hover:bg-blue-500 hover:text-white"

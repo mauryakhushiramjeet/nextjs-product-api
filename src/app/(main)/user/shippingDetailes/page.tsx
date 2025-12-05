@@ -213,7 +213,7 @@ const ShippingPage = () => {
     console.log(orderData);
   };
   return (
-    <div className="px-20 mt-[112px]">
+    <div className="px-5">
       <div className="font-semibold text-3xl flex gap-1 items-center ">
         {" "}
         <p className="w-16 h-1 bg-[#282C35] rounded-full "></p>

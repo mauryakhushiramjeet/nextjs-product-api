@@ -1,6 +1,5 @@
 import Sale from "@/lib/models/SaleModel";
 import { NextResponse } from "next/server";
-import mongoose from "mongoose";
 import Category from "@/lib/models/CategoryModel";
 
 export async function GET() {

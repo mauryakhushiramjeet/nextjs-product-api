@@ -58,7 +58,7 @@ const Orderpage = () => {
     });
   };
   return (
-    <div className="w-full font-Inter mt-[112px]">
+    <div className="w-full font-Inter">
       {order && order?.length > 0 ? (
         <div className="px-10">
           <HeadingComponent heading="My Orders"/>
@@ -179,10 +179,10 @@ const Orderpage = () => {
               width={200}
             />
           </div>
-          <p className="text-lg font-semibold text-gray-700">
+          <p className="text-lg sm:text-xl 2xl:text-3xl font-semibold text-gray-700">
             No orders found 📦
           </p>
-          <p className="text-gray-500 text-base mt-1">
+          <p className="text-gray-500 text-sm sm:text-base 2xl:text-xl mt-1">
             Looks like you haven’t placed any orders yet.
           </p>
         </div>

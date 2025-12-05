@@ -50,7 +50,9 @@ const HomePage = () => {
           {saleData.map((sale) => (
             <SwiperSlide key={sale._id}>
               <div className="relative w-full h-fit py-11 mb-8 overflow-hidden rounded-3xl bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 shadow-lg">
-                <div className={` hidden sm:block absolute  top-4 right-4 bg-gradient-to-r from-red-600 to-orange-500 px-[10px] xl:px-6 py-3 rounded-2xl shadow-md`}>
+                <div
+                  className={` hidden sm:block absolute  top-4 right-4 bg-gradient-to-r from-red-600 to-orange-500 px-[10px] xl:px-6 py-3 rounded-2xl shadow-md`}
+                >
                   <div className="flex flex-col items-center gap-1 md:gap-2 2xl:gap-3">
                     <p className="text-white text-base sm:text-xl xl:text-2xl 2xl:text-3xl">
                       {sale?.disccountPercentage}% OFF on{" "}
@@ -71,7 +73,9 @@ const HomePage = () => {
                     <p className="text-xl xs:text-2xl 2xl:text-6xl font-bold text-white drop-shadow-lg tracking-wide capitalize">
                       {sale?.name}
                     </p>
-                    <div className={`flex sm:hidden items-center gap-1 md:gap-2 2xl:gap-3`}>
+                    <div
+                      className={`flex sm:hidden items-center gap-1 md:gap-2 2xl:gap-3`}
+                    >
                       <p className="text-red-600 text-base sm:text-xl xl:text-2xl 2xl:text-3xl">
                         {sale?.disccountPercentage}% OFF on{" "}
                       </p>
@@ -89,7 +93,7 @@ const HomePage = () => {
                     </p>
                     <button
                       onClick={() => router.push("/user/shopping")}
-                      className="mt-2 text-lg md:text-xl 2xl:text-2xl w-fit px-6 md:px-8 py-2 bg-amber-500 cursor-pointer hover:bg-amber-400 text-black font-semibold rounded-lg shadow-md transition-transform hover:scale-105"
+                      className="mt-2 text-sm sm:text-lg md:text-xl 2xl:text-2xl w-fit px-4 sm:px-6 md:px-8 py-2 bg-amber-500 cursor-pointer hover:bg-amber-400 text-black font-semibold rounded-lg shadow-md transition-transform hover:scale-105"
                     >
                       Shop Now
                     </button>

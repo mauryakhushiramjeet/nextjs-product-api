@@ -49,12 +49,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
         />
       )}
       <div className="flex w-full justify-between">
-        <p className="text-gray-800 text-base xs:text-sm sm:text-lg xl:text-xl 2xl:text-2xl ">
+        <p className="text-gray-800 text-base xs:text-sm sm:text-base xl:text-xl 2xl:text-2xl ">
           {product.name}
         </p>
-        {product.discount && !saleForAll && (
+        {product.discount &&  (
           <p className="text-red-600 font-medium text-base xs:text-sm sm:text-base xl:text-lg 2xl:text-xl">
-            Discount {product.discount} %
+             {product.discount} % Off
           </p>
         )}
       </div>
