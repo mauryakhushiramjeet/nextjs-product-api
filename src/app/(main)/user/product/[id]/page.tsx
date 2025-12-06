@@ -129,11 +129,10 @@ const ProductPage = () => {
   }
 
   // if (!productData.data) return <div>No product found</div>;
-  const loading=true
   return (
     <div className="p-5">
-      {loading ? (
-        <div className="grid grid-cols-1 xs::grid-cols-2 gap-5 lg:gap-20 animate-pulse">
+      {productData?.loading ? (
+        <div className="grid grid-cols-1 xs:grid-cols-2 gap-5 lg:gap-20 animate-pulse">
           {/* IMAGE SKELETON */}
           <div className="w-full">
             <div className="w-full h-[250px] md:h-[300px] bg-gray-300 rounded-xl"></div>
