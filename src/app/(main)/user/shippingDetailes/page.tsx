@@ -213,18 +213,17 @@ const ShippingPage = () => {
     console.log(orderData);
   };
   return (
-    <div className="px-5">
+    <div className="p-5">
       <div className="font-semibold text-3xl flex gap-1 items-center ">
         {" "}
-        <p className="w-16 h-1 bg-[#282C35] rounded-full "></p>
         <HeadingComponent heading="Shipping Detailes" icons={<LuPackageCheck/>}/>
       </div>
       {showForm ? (
         <form
-          className="bg-gray-100  rounded-lg shadow p-10 mt-5"
+          className="bg-gray-100  rounded-lg shadow p-[10px] sm:p-10 mt-5"
           onSubmit={handleSubmit}
         >
-          <div className="grid grid-cols-3 gap-y-3 gap-x-5">
+          <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-y-3 gap-x-5">
             <div className="flex flex-col gap-2">
               <label className="text-sm">Full Name*</label>
               <input
@@ -371,7 +370,7 @@ const ShippingPage = () => {
           <div className="mt-3">
             <button
               type="submit"
-              className="px-10 py-2 cursor-pointer bg-gray-950 text-white rounded-lg"
+              className="px-4 md:px-6 lg:px-10 py-2 cursor-pointer bg-gray-950 text-white rounded-lg"
             >
               Order Placed
             </button>

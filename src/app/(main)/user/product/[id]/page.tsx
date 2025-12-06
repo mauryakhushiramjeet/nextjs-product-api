@@ -127,94 +127,135 @@ const ProductPage = () => {
   if (cartData) {
     // console.log(cartData);
   }
-  if (productData.loading) return <div>Loading...</div>;
-  if (productData.isError) return <div>Something went wrong</div>;
-  if (!productData.data) return <div>No product found</div>;
+
+  // if (!productData.data) return <div>No product found</div>;
+  const loading=true
   return (
     <div className="p-5">
-      <div className="grid grid-cols-2 gap-5 md:gap-20">
-        <div className="">
-          {typeof productDetailes?.image == "string" && (
-            <Image
-              src={productDetailes.image}
-              alt="product-image"
-              height={700}
-              width={700}
-              className=" h-[300px] w-full max-w-[750px] object-cover"
-            />
-          )}
-        </div>
-        <div className="flex flex-col gap-2 w-full max-w-[700px]">
-          <p className="text-[#1D2939] text-3xl 2xl:text-5xl font-bold">
-            {productDetailes?.name}
-          </p>
-          {productDetailes?.discount ? (
-            <div className="flex gap-3 items-center text-base md:text-lg xl:text-xl 2xl:text-2xl">
-              <p className="text-gray-400  font-semibold relative">
-                {productDetailes?.price} Rs.00
-                <div className="w-full h-[1px] bg-gray-600 absolute rotate-[9deg] top-[15px]"></div>
-              </p>
-              <p className="text-green-500 font-semibold">
-                {productDetailes?.discountedPrice} Rs.00
-              </p>
-              <p className="hidden md:block text-red-600 font-semibold">
-                Discount {productDetailes?.discount} %
-              </p>
-              <p className="block md:hidden text-red-600 font-semibold">
-                 {productDetailes?.discount}% Off
-              </p>
-            </div>
-          ) : (
-            <p className="text-green-500 font-semibold text-2xl">
-              {productDetailes?.price} <span>Rs</span>
-            </p>
-          )}
+      {loading ? (
+        <div className="grid grid-cols-1 xs::grid-cols-2 gap-5 lg:gap-20 animate-pulse">
+          {/* IMAGE SKELETON */}
+          <div className="w-full">
+            <div className="w-full h-[250px] md:h-[300px] bg-gray-300 rounded-xl"></div>
+          </div>
 
-          <p className="text-gray-500 text-lg 2xl:text-2xl md:mt-2 font-roboto line-clamp-3">
-            {productDetailes?.description}
-          </p>
-          <p
-            className={`text-xl ${
-              productDetailes?.available ? "text-green-600" : "text-red-600"
-            } text-sm font-medium`}
-          >
-            {productDetailes?.available ? "Available in stock" : "Out of Stock"}
-          </p>
-          <div className="flex gap-5 items-center font-semibold text-sm md:text-base 2xl:text-xl">
-            <button
-              onClick={() => {
-                if (productDetailes?._id) {
-                  handleAddToCart(
-                    new mongoose.Types.ObjectId(productDetailes?._id)
-                  );
-                }
-              }}
-              disabled={productDetailes?.available == false}
-              className={`${
-                productDetailes?.available
-                  ? "cursor-pointer"
-                  : "cursor-no-drop opacity-75"
-              } px-[10px] md:px-5 py-2 bg-[#E2DFD2]  text-black rounded-lg`}
-            >
-              ADD TO CART
-            </button>
-            <button
-              className="px-[10px] md:px-5 py-2 bg-[#D0F0C0] text-gray-900 rounded-lg cursor-pointer"
-              onClick={() =>
-                handleBayNow(
-                  productDetailes?._id as string,
-                  productDetailes?.name as string,
-                  //   (productDetailes ? productDetailes.discountedPrice : productDetailes.price) as number
-                  // )
-                  finalPrice as number
-                )
-              }
-            >
-              BUY NOW
-            </button>
+          {/* CONTENT SKELETON */}
+          <div className="flex flex-col gap-4 w-full max-w-[700px]">
+            {/* Title */}
+            <div className="h-8 w-3/4 bg-gray-300 rounded"></div>
+
+            {/* Price lines */}
+            <div className="flex gap-3 items-center">
+              <div className="h-5 w-24 bg-gray-300 rounded"></div>
+              <div className="h-5 w-20 bg-gray-300 rounded"></div>
+              <div className="h-5 w-16 bg-gray-300 rounded"></div>
+            </div>
+
+            {/* Description */}
+            <div className="space-y-2">
+              <div className="h-4 w-full bg-gray-300 rounded"></div>
+              <div className="h-4 w-[90%] bg-gray-300 rounded"></div>
+              <div className="h-4 w-[70%] bg-gray-300 rounded"></div>
+            </div>
+
+            {/* Availability */}
+            <div className="h-5 w-40 bg-gray-300 rounded"></div>
+
+            {/* Buttons */}
+            <div className="flex gap-5 mt-2">
+              <div className="h-10 w-32 bg-gray-300 rounded-md"></div>
+              <div className="h-10 w-32 bg-gray-300 rounded-md"></div>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="grid grid-cols-1 xs:grid-cols-2 gap-[10px] sm:gap-5 lg:gap-20">
+          <div className="w-full">
+            {typeof productDetailes?.image == "string" && (
+              <Image
+                src={productDetailes.image}
+                alt="product-image"
+                height={700}
+                width={700}
+                className=" h-[250px] xs:h-full md:h-[300px] w-full max-w-[750px] object-cover"
+              />
+            )}
+          </div>
+          <div className="flex flex-col gap-2 w-full max-w-[700px]">
+            <p className="text-[#1D2939] text-xl sm:text-2xl md:text-3xl 2xl:text-5xl font-semibold md:font-bold">
+              {productDetailes?.name}
+            </p>
+            {productDetailes?.discount ? (
+              <div className="flex gap-3 items-center text-base md:text-lg xl:text-xl 2xl:text-2xl">
+                <p className="text-gray-400  font-semibold relative">
+                  {productDetailes?.price} Rs.00
+                  <div className="w-full h-[1px] bg-gray-600 absolute rotate-[9deg] top-[15px]"></div>
+                </p>
+                <p className="text-green-500 font-semibold">
+                  {productDetailes?.discountedPrice} Rs.00
+                </p>
+                <p className="hidden md:block text-red-600 font-semibold">
+                  Discount {productDetailes?.discount} %
+                </p>
+                <p className="block md:hidden text-red-600 font-semibold">
+                  {productDetailes?.discount}% Off
+                </p>
+              </div>
+            ) : (
+              <p className="text-green-500 font-semibold text-lg sm:text-2xl md:text-2xl">
+                {productDetailes?.price} <span>Rs.00</span>
+              </p>
+            )}
+
+            <p className="text-gray-500 text-lg 2xl:text-2xl md:mt-2 font-roboto line-clamp-3">
+              {productDetailes?.description}
+            </p>
+            <p
+              className={`text-base lg:text-xl ${
+                productDetailes?.available ? "text-green-600" : "text-red-600"
+              } text-sm font-medium`}
+            >
+              {productDetailes?.available
+                ? "Available in stock"
+                : "Out of Stock"}
+            </p>
+            <div className="flex gap-1 sm:gap-5 items-center font-semibold text-xs sm:text-sm md:text-base 2xl:text-xl">
+              <button
+                onClick={() => {
+                  if (productDetailes?._id) {
+                    handleAddToCart(
+                      new mongoose.Types.ObjectId(productDetailes?._id)
+                    );
+                  }
+                }}
+                disabled={productDetailes?.available == false}
+                className={`${
+                  productDetailes?.available
+                    ? "cursor-pointer"
+                    : "cursor-no-drop opacity-75"
+                } px-[10px] md:px-5 py-2 bg-[#E2DFD2]  text-black rounded-lg`}
+              >
+                ADD TO CART
+              </button>
+              <button
+                className="px-[10px] md:px-5 py-2 bg-[#D0F0C0] text-gray-900 rounded-lg cursor-pointer"
+                onClick={() =>
+                  handleBayNow(
+                    productDetailes?._id as string,
+                    productDetailes?.name as string,
+                    //   (productDetailes ? productDetailes.discountedPrice : productDetailes.price) as number
+                    // )
+                    finalPrice as number
+                  )
+                }
+              >
+                BUY NOW
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="my-6">
         <HeadingComponent heading="Recommende productes" />
         <div className="mt-5">
@@ -226,7 +267,7 @@ const ProductPage = () => {
               768: {
                 slidesPerView: 3,
               },
-               425: {  
+              425: {
                 slidesPerView: 2,
               },
             }}
