@@ -216,7 +216,10 @@ const ShippingPage = () => {
     <div className="p-5">
       <div className="font-semibold text-3xl flex gap-1 items-center ">
         {" "}
-        <HeadingComponent heading="Shipping Detailes" icons={<LuPackageCheck/>}/>
+        <HeadingComponent
+          heading="Shipping Detailes"
+          icons={<LuPackageCheck />}
+        />
       </div>
       {showForm ? (
         <form
@@ -385,9 +388,9 @@ const ShippingPage = () => {
           </div>
         </form>
       ) : (
-        <div className="space-y-1 text-sm text-gray-700 flex flex-col gap-2 bg-gray-100 w-full  rounded-lg shadow p-8 mt-5">
+        <div className="space-y-1  text-gray-700 flex flex-col gap-2 text-sm sm:text-base 2xl:text-xl bg-gray-100 w-full  rounded-lg shadow xs:p-2 sm:p-5 md:p-8 mt-5">
           <div className="flex justify-between items-center w-full">
-            <p className="text-xl font-bold">Choose Address</p>
+            <p className="text-base md:text-xl font-medium md:font-bold">Choose Address</p>
             <button
               className="text-white px-5 py-2 rounded-lg bg-gray-950 cursor-pointer"
               onClick={() => setShowForm(true)}
@@ -405,46 +408,47 @@ const ShippingPage = () => {
               key={adderess._id}
               className={`grid ${
                 isaddressSelectedId === adderess._id ? "bg-white" : ""
-              } grid-cols-3 gap-3 border-b border-b-gray-400 rounded-lg p-3 cursor-pointer hover:bg-white`}
+              } grid-cols-2 md:grid-cols-3 gap-3 border-b border-b-gray-400 rounded-lg p-3 cursor-pointer hover:bg-white`}
             >
               <p>
-                <span className="font-medium">Full Name:</span>{" "}
-                {adderess.fullname}
+                <span className="">Full Name:</span> {adderess.fullname}
               </p>
               <p>
-                <span className="font-medium">Phone:</span> {adderess.phone}
+                <span className="">Phone:</span> {adderess.phone}
               </p>
               <p>
-                <span className="font-medium">Address:</span> {adderess.address}
+                <span className="">Address:</span> {adderess.address}
               </p>
               <p>
-                <span className="font-medium">City:</span> {adderess.city}
+                <span className="">City:</span> {adderess.city}
               </p>
               <p>
-                <span className="font-medium">State:</span> {adderess.state}
+                <span className="">State:</span> {adderess.state}
               </p>
               <p>
-                <span className="font-medium">Country:</span> {adderess.country}
+                <span className="">Country:</span> {adderess.country}
               </p>
               <p>
-                <span className="font-medium">Address Type:</span>{" "}
-                {adderess.addressType}
+                <span className="">Address Type:</span> {adderess.addressType}
               </p>
             </div>
           ))}
-          <button
-            onClick={() => {
-              if (isaddressSelectedId != null)
-                handleOrderUsingAddress(isaddressSelectedId);
-            }}
-            className={`px-5 py-2 rounded-lg text-white ${
-              isaddressSelectedId
-                ? "bg-gray-950 cursor-pointer"
-                : "bg-gray-950/70 cursor-no-drop"
-            }`}
-          >
-            Order placeholder
-          </button>
+          <div className="flex items-center justify-center w-full">
+            {" "}
+            <button
+              onClick={() => {
+                if (isaddressSelectedId != null)
+                  handleOrderUsingAddress(isaddressSelectedId);
+              }}
+              className={`px-6 w-fit py-2 rounded-lg text-white ${
+                isaddressSelectedId
+                  ? "bg-gray-950 cursor-pointer"
+                  : "bg-gray-950/70 cursor-no-drop"
+              }`}
+            >
+              Order placeholder
+            </button>
+          </div>
         </div>
       )}
     </div>

@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import ConfirmPopup from "@/componentes/ConfirmPop";
 import { UpdateStatusById } from "@/store/updateStatusSlice";
 import HeadingComponent from "@/componentes/HeadingComponent";
+import OrderSkeleton from "@/componentes/OrderSkalton";
 
 const Orderpage = () => {
   const [order, setOrder] = useState<OrderType[] | null>(null);
@@ -58,136 +59,136 @@ const Orderpage = () => {
     });
   };
   return (
-    <div className="w-full font-Inter">
-      {order && order?.length > 0 ? (
-        <div className="px-10">
-          <HeadingComponent heading="My Orders"/>
+    <div className="w-full font-Inter p-5">
+  <HeadingComponent heading="My Orders" />
 
-          <div className="bg-gray-100 p-5 w-full mt-6 shadow">
-            <p className="text-lg text-gray-700">
-              You have {order.length} order(s)
-            </p>
+ {orderDetails.isLoading && <OrderSkeleton />}
 
-            <div className="overflow-y-auto max-h-[500px] mt-[10px]">
-              <table className="w-full text-left border-collapse">
-                <thead className="bg-white sticky top-0 z-10">
-                  <tr>
-                    <th className="px-2 py-2 border-b border-gray-400">
-                      Sr No
-                    </th>
-                    <th className="px-2 py-2 border-b border-gray-400">
-                      Product Name
-                    </th>
-                    <th className="px-2 py-2 border-b border-gray-400">
-                      Payment Method
-                    </th>
-                    <th className="px-2 py-2 border-b border-gray-400">
-                      Status
-                    </th>
+  {!orderDetails.isLoading && order && order.length > 0 && (
+    <div className="">
+      <div className="bg-gray-100 w-full mt-6 shadow">
+        <p className="text-base sm:text-lg text-gray-700">
+          You have {order.length} order(s)
+        </p>
 
-                    <th className="px-2 py-2 border-b border-gray-400">
-                      Order Date
-                    </th>
-                    <th className="px-2 py-2 border-b border-gray-400">
-                      Delivered On
-                    </th>
-                    <th className="px-2 py-2 border-b border-gray-400">
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {order.map((item, index) => (
-                    <tr key={item._id} className="border-b border-b-gray-400">
-                      <td>{index + 1}</td>
-                      <td className="py-3 px-2 border-l border-l-gray-400 text-left">
-                        {item.items.map((product: OrderItem, index) => (
-                          <div
-                            key={index}
-                            className="flex flex-col gap-2 cursor-pointer"
-                            onClick={() =>
-                              router.push(
-                                `/user/product/${product.product.productId}`
-                              )
-                            }
-                          >
-                            <div className="flex gap-2 line-clamp-1">
-                              <p>{product.product.productName}</p>
-                              <p>X{product.quantity}</p>
-                              <p>{product.price}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </td>
-                      <td className="py-3 px-2 border-l border-l-gray-400">
-                        {item.paymentMethod}
-                      </td>
-                      <td className="py-3 px-2 text-green-600 font-medium border-l border-l-gray-400">
-                        {item.status}
-                      </td>
-                      {item.createdAt != null && (
-                        <td className={` py-3 px-2 border-l border-l-gray-400`}>
-                          {new Date(item?.createdAt).toDateString()}
-                        </td>
-                      )}
-                      {item.updatedAt != null && item.status == "delivered" ? (
-                        <td className="py-3 px-2 border-l border-l-gray-400 text-green-700 font-semibold">
-                          {new Date(item?.updatedAt).toDateString()}
-                        </td>
-                      ) : (
-                        <td className="py-3 px-2 border-l border-l-gray-400">
-                          Not Yet Delivered
-                        </td>
-                      )}
-                      <td className="py-1 px-2  border-l border-l-gray-400">
-                        <button
-                          onClick={() => {
-                            setUpdateStatusOrderId(item._id as string);
-                            setShowModel(true);
-                          }}
-                          className={`${
-                            item.status == "pending"
-                              ? "bg-red-700 cursor-pointer"
-                              : " bg-red-600/50 cursor-no-drop"
-                          } py-1 px-3 rounded-lg border-l text-sm text-white border-l-gray-400`}
-                        >
-                          {" "}
-                          Cancel
-                        </button>
-                      </td>{" "}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-          {showModel && (
-            <ConfirmPopup
-              message="Are you sure , you want to cancele this order"
-              onCancel={() => setShowModel(false)}
-              onConfirm={handleOrderCancel}
-            />
-          )}
+        <div className="overflow-y-auto max-h-[500px] mt-[10px]">
+          <table className="w-[768px] lg:w-full text-left border-collapse text-sm xs:text-base xl:text-lg 2xl:text-[22px]">
+            <thead className="bg-white sticky top-0 z-10">
+              <tr>
+                <th className="px-2 py-2 border-b border-gray-400">Sr No</th>
+                <th className="px-2 py-2 border-b border-gray-400">
+                  Product Name
+                </th>
+                <th className="px-2 py-2 border-b border-gray-400">
+                  Payment Method
+                </th>
+                <th className="px-2 py-2 border-b border-gray-400">Status</th>
+                <th className="px-2 py-2 border-b border-gray-400">
+                  Order Date
+                </th>
+                <th className="px-2 py-2 border-b border-gray-400">
+                  Delivered On
+                </th>
+                <th className="px-2 py-2 border-b border-gray-400">Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {order.map((item, index) => (
+                <tr key={item._id} className="border-b border-b-gray-400">
+                  <td>{index + 1}</td>
+
+                  <td className="py-3 px-2 border-l border-l-gray-400 text-left">
+                    {item.items.map((product: OrderItem, index) => (
+                      <div
+                        key={index}
+                        className="flex flex-col gap-2 cursor-pointer"
+                        onClick={() =>
+                          router.push(
+                            `/user/product/${product.product.productId}`
+                          )
+                        }
+                      >
+                        <div className="flex gap-2 line-clamp-1">
+                          <p>{product.product.productName}</p>
+                          <p>X{product.quantity}</p>
+                          <p>{product.price}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </td>
+
+                  <td className="py-3 px-2 border-l border-l-gray-400">
+                    {item.paymentMethod}
+                  </td>
+
+                  <td className="py-3 px-2 text-green-600 font-medium border-l border-l-gray-400">
+                    {item.status}
+                  </td>
+
+                  <td className="py-3 px-2 border-l border-l-gray-400">
+                    {item.createdAt
+                      ? new Date(item.createdAt).toDateString()
+                      : "-"}
+                  </td>
+
+                  <td className="py-3 px-2 border-l border-l-gray-400">
+                    {item.status === "delivered" && item.updatedAt
+                      ? new Date(item.updatedAt).toDateString()
+                      : "Not Yet Delivered"}
+                  </td>
+
+                  <td className="py-1 px-2 border-l border-l-gray-400">
+                    <button
+                      onClick={() => {
+                        setUpdateStatusOrderId(item._id as string);
+                        setShowModel(true);
+                      }}
+                      className={`${
+                        item.status === "pending"
+                          ? "bg-red-700 cursor-pointer"
+                          : "bg-red-600/50 cursor-no-drop"
+                      } py-1 px-3 rounded-lg text-sm text-white`}
+                    >
+                      Cancel
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      ) : (
-        <div className="flex items-center justify-center h-[500px] flex-col">
-          <div>
-            <Image
-              src="/images/order.webp"
-              alt="empty orders"
-              height={200}
-              width={200}
-            />
-          </div>
-          <p className="text-lg sm:text-xl 2xl:text-3xl font-semibold text-gray-700">
-            No orders found 📦
-          </p>
-          <p className="text-gray-500 text-sm sm:text-base 2xl:text-xl mt-1">
-            Looks like you haven’t placed any orders yet.
-          </p>
-        </div>
+      </div>
+
+      {showModel && (
+        <ConfirmPopup
+          message="Are you sure , you want to cancele this order"
+          onCancel={() => setShowModel(false)}
+          onConfirm={handleOrderCancel}
+        />
       )}
     </div>
+  )}
+
+  {!orderDetails.isLoading && order && order.length === 0 && (
+    <div className="flex items-center justify-center h-[500px] flex-col">
+      <Image
+        src="/images/order.webp"
+        alt="empty orders"
+        height={200}
+        width={200}
+      />
+
+      <p className="text-lg sm:text-xl 2xl:text-3xl font-semibold text-gray-700">
+        No orders found 📦
+      </p>
+      <p className="text-gray-500 text-sm sm:text-base 2xl:text-xl mt-1">
+        Looks like you haven’t placed any orders yet.
+      </p>
+    </div>
+  )}
+</div>
+
   );
 };
 

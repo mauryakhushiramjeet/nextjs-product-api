@@ -4,7 +4,6 @@ import { FaRegUser } from "react-icons/fa";
 import cookie from "js-cookie";
 import { FaShoppingCart } from "react-icons/fa";
 import { IoMenuSharp } from "react-icons/io5";
-import { RxCross2 } from "react-icons/rx";
 import { RxCross1 } from "react-icons/rx";
 
 import { useRouter } from "next/navigation";
@@ -32,10 +31,6 @@ const Navbar = () => {
       {
         menuName: "Shopping",
         route: "/user/shopping",
-      },
-      {
-        menuName: "Contact Us",
-        route: "/user/contactUs",
       },
       {
         menuName: "About Us",
@@ -82,10 +77,11 @@ const Navbar = () => {
 
   if (!role) return;
   const menuItems = MENU_MAP[role] || [];
+  console.log("length of cart items",count?.length)
   return (
     <>
       <header className="px-1 sm:px-5 flex sticky top-0 z-50 right-[2px] justify-between w-full bg-gray-50 border border-[#FDFEF9] text-black shadow rounded-md  ">
-        <div>
+        <div className="cursor-pointer" onClick={() => router.push("/")}>
           <Image
             src="/images/logok.png"
             height={200}
@@ -107,7 +103,7 @@ const Navbar = () => {
         </div>
         <div className="flex gap-4 sm:gap-6 items-center">
           {role === "user" && (
-            <div className="text-black flex px-3 py-1 cursor-pointer items-center gap-1 rounded-lg hover:bg-[#340D0E] hover:text-white">
+            <div className="text-black flex px-3 py-1 cursor-pointer items-center gap-1 rounded-lg">
               <FaShoppingCart />
               <div
                 className="text-base relative w-fit"
@@ -115,7 +111,7 @@ const Navbar = () => {
               >
                 <p className="text-base xl:text-lg 2xl:text-[22px]">Cart</p>
                 {count?.length != 0 && (
-                  <p className="w-6 h-6 absolute top-[-12px] right-[-15px] flex justify-center items-center lg:bg-black text-white rounded-full text-base">
+                  <p className="w-5 lg:w-6 h-5 lg:h-6 absolute top-[-9px] lg:top-[-12px] right-[-15px] flex justify-center items-center bg-black text-white rounded-full text-xs lg:text-base">
                     {count ? count.length : 0}
                   </p>
                 )}
@@ -139,7 +135,7 @@ const Navbar = () => {
             )}
           </div>
           <p
-            className="text-xl block lg:hidden w-fit "
+            className="text-xl block lg:hidden w-fit cursor-pointer"
             onClick={() => setIsMenuOpen((prev) => !prev)}
           >
             {isMenuOpen ? <RxCross1 /> : <IoMenuSharp />}
@@ -147,7 +143,7 @@ const Navbar = () => {
           <div
             className={`absolute flex flex-col lg:hidden ${
               isMenuOpen ? "block" : "hidden"
-            } gap-8 items-center bg-[#FDFEF9] rounded-bl-xl  right-0 top-[76px] md:top-[90px] w-full sm:w-[50%] font-semibold text-base`}
+            } gap-8 items-center bg-[#FDFEF9] rounded-bl-xl py-5 right-0 top-[76px] md:top-[90px] w-full sm:w-[50%] font-semibold text-base`}
           >
             {menuItems.map((nav, index) => (
               <div

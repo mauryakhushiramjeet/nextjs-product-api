@@ -131,19 +131,21 @@ const CartPage = () => {
     localStorage.setItem("orderDetails", JSON.stringify(order));
     router.push("/user/shippingDetailes");
   };
-  
+
   return (
     <div>
       {cartProductDetailes && cartProductDetailes?.length > 0 ? (
         <div className="w-full font-Inter p-5">
           <div className="font-semibold text-3xl flex gap-1 items-center ">
             {" "}
-            <p className="w-16 h-1 bg-[#282C35] rounded-full "></p>
-            <HeadingComponent heading="Shopping Cart" icons={<IoBagHandleOutline/>}/>
+            <HeadingComponent
+              heading="Shopping Cart"
+              icons={<IoBagHandleOutline />}
+            />
           </div>
-          <div className="flex w-full gap-10 mt-[21px] ">
+          <div className="flex w-full gap-10 mt-[21px] flex-col lg:flex-row">
             {" "}
-            <div className="bg-white p-4 w-full max-w-[900px]">
+            <div className="bg-white p-4 w-full  lg:max-w-[650px] xl:max-w-[800px] 2xl:max-w-[1000px]">
               <p className="text-lg text-gray-700">
                 You Have{" "}
                 {cartProductDetailes ? cartProductDetailes.length : "No"}{" "}
@@ -151,11 +153,14 @@ const CartPage = () => {
               </p>
 
               <div className="overflow-y-auto max-h-[400px] mt-[10px]">
-                <table className="w-full text-left border-collapse">
+                <table className="w-full text-left border-collapse text-base xl:text-lg 2xl:text-[22px]">
                   <thead className="bg-white sticky top-0 z-10">
                     <tr>
                       <th className="px-2 py-2 border-b border-gray-400">
                         Product
+                      </th>
+                      <th className="px-2 py-2 border-b border-gray-400">
+                        Name
                       </th>
                       <th className="px-2 py-2 border-b border-gray-400">
                         Price
@@ -176,7 +181,7 @@ const CartPage = () => {
                       <tr key={item._id} className="">
                         <td className="py-3 px-2 ">
                           <div
-                            className="flex gap-5 items-center cursor-pointer"
+                            className="cursor-pointer"
                             onClick={() =>
                               router.push(
                                 `/user/product/${item.productDetailes._id}`
@@ -190,16 +195,19 @@ const CartPage = () => {
                               width={70}
                               className="h-[70px] w-[70px] object-cover"
                             />
-                            <div className="flex flex-col gap-1">
-                              <p>{item.productDetailes.name}</p>
-                              <p>
-                                {item.productDetailes.available
-                                  ? ".Available"
-                                  : ""}
-                              </p>
-                            </div>
                           </div>
                         </td>
+                        <td className="py-3 px-2">
+                          <div className="flex flex-col gap-1">
+                            <p>{item.productDetailes.name}</p>
+                            <p>
+                              {item.productDetailes.available
+                                ? "Available"
+                                : ""}
+                            </p>
+                          </div>
+                        </td>
+
                         <td className="py-3 px-2 ">
                           {item.productDetailes.price} Rs.
                         </td>
@@ -255,10 +263,10 @@ const CartPage = () => {
                 </table>
               </div>
             </div>
-            <div className="bg-white shadow  w-full max-w-[370px] flex-1 h-fit p-4">
-              <p className="text-lg text-gray-700">Cart Totals</p>
-              <div className="flex flex-col pt-2 text-gray-500">
-                <div className="py-3 border-t border-t-gray-200 flex items-center justify-between">
+            <div className="bg-white shadow  w-full max-w-[600pxpx] flex-1 h-fit p-4">
+              <p className="text-gray-700 text-xl 2xl:text-2xl">Cart Totals</p>
+              <div className="flex flex-col pt-2 text-gray-500 text-base xl:text-lg 2xl:text-[22px]">
+                <div className="py-3 border-t border-t-gray-200 flex items-center justify-between ">
                   <p>Subtotal</p>
                   <p>{cartSubtotals}.00 Rs</p>
                 </div>
@@ -267,7 +275,7 @@ const CartPage = () => {
                   <div className="flex flex-col gap-1 ">
                     <p>Free Shipping</p>
                     <p>Pickup:{shippingFees}.00 Rs</p>
-                    <p className="text-gray-400 text-base underline">
+                    <p className="text-gray-400  underline">
                       Calculate shipping
                     </p>
                   </div>
@@ -276,13 +284,14 @@ const CartPage = () => {
                   <p>Total</p>
                   <p>{totalAmount}.00 Rs</p>
                 </div>
-                <button
-                  className="bg-gray-800 text-white w-full cursor-pointer py-2 text-base"
-                  // onClick={() => router.push("/user/shippingDetailes")}
-                  onClick={() => handlePlaceOrderDetails()}
-                >
-                  Proceed to Checkout
-                </button>
+                <div className="w-full flex items-center justify-center">
+                  <button
+                    className="bg-gray-800 text-white w-full cursor-pointer py-2 px-3 xl:px-0"
+                    onClick={() => handlePlaceOrderDetails()}
+                  >
+                    Proceed to Checkout
+                  </button>
+                </div>
               </div>
             </div>
           </div>

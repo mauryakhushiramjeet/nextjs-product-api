@@ -3,6 +3,7 @@ import Cart, { CartSchemaType } from "@/lib/models/CartModel";
 import Product from "@/lib/models/ProductModel";
 import Sale, { SaleInterface } from "@/lib/models/SaleModel";
 import { verifyToken } from "@/lib/tokenmanage/verifyToken";
+import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -20,6 +21,7 @@ export async function POST(req: NextRequest) {
     }
     const existProduct = await Product.findById(productId);
     const sales = await Sale.find();
+    console.log(existProduct)
     if (!existProduct) {
       return NextResponse.json({
         success: false,
@@ -28,7 +30,7 @@ export async function POST(req: NextRequest) {
     }
     const related_Product_of_SaleCategory = sales.find(
       (sale) =>
-        sale?.category.toLowerCase() === existProduct.category.toLowerCase()
+        sale?.categoryId.some((categoryId:{id:mongoose.Schema.Types.ObjectId})=>categoryId.toString()=== existProduct.categoryId.toString()) 
     );
 
     let finalPrice = existProduct.price;
