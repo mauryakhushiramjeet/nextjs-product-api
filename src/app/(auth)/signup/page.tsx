@@ -33,7 +33,8 @@ const SignupPage = () => {
 
             if (res.payload.success) {
               toast.success(res.payload.message);
-              router.push("/login");
+              localStorage.setItem("email", value.email);
+              router.push("/verifyOtp");
             } else {
               toast.error(res.payload.message);
             }

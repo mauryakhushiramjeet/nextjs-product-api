@@ -12,3 +12,10 @@ export const signUpValidation = Yup.object({
   password: Yup.string().required().min(6),
   name: Yup.string().required().min(2),
 });
+// utils/schema/authSchema.ts
+
+export const otpValidation = Yup.object({
+  otp: Yup.string()
+    .required("OTP is required")
+    .matches(/^[0-9]{6}$/, "OTP must be 6 digits"),
+});

@@ -20,6 +20,8 @@ export const signupUser = createAsyncThunk(
   }
 );
 
+
+
 // State type
 interface SignupStateType {
   isLoading: boolean;

@@ -8,8 +8,11 @@ import { useFormik } from "formik";
 import { loginValodationSchema } from "@/utils/schema/authSchema";
 import { useAppDispatch } from "@/store/store";
 import { loginUser } from "@/store/loginSlice";
+import { TbLoader3 } from "react-icons/tb";
+import { resendEmailOtp, verifyEmailOtp } from "@/store/authActions";
 
 const LoginPage = () => {
+  const [errorMessage, setErrorMessage] = useState<null | string>(null);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { setRole } = useContext(RoleContext);
@@ -25,27 +28,45 @@ const LoginPage = () => {
       onSubmit: (value, action) => {
         setLoading(true);
 
-        dispatch(loginUser(value)).then((res) => {
+        dispatch(loginUser(value)).unwrap().then((res) => {
+          console.log(res)
           setLoading(false);
 
-          if (res.payload.success) {
-            toast.success(res.payload.message);
-            localStorage.setItem("role", res.payload.data.role);
-            localStorage.setItem("userId", res.payload.data.id);
+          if (res.success) {
+            toast.success(res.message);
+            localStorage.setItem("role", res.data.role);
+            localStorage.setItem("userId", res.data.id);
 
-            setRole(res.payload.data.role);
-
-            if (res.payload.data.role === "admin") router.push("/admin/dashboard");
-            if (res.payload.data.role === "user") router.push("/");
+            setRole(res.data.role);
+            if (res.data.role === "admin")
+              router.push("/admin/dashboard");
+            if (res.data.role === "user") router.push("/");
 
             action.resetForm();
           } else {
-            toast.error(res.payload.message);
+            toast.error(res.message);
+              console.log(res.message)
+          setErrorMessage(res.message);
           }
         });
       },
     });
-
+  const handleResendOtp = async () => {
+    const email = localStorage.getItem("email");
+    if (!email) return;
+    dispatch(resendEmailOtp({ email }))
+      .unwrap()
+      .then((res) => {
+        if (res.success) {
+          toast.success(res.message);
+          router.push("/verifyOtp");
+        } else {
+          toast.error(res.message);
+        
+        }
+      });
+  };
+  console.log(errorMessage)
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-2xl shadow-lg w-96">
@@ -92,16 +113,61 @@ const LoginPage = () => {
             disabled={loading}
             className="w-full bg-[#154D71] text-white py-2 rounded-lg cursor-pointer hover:bg-[#1C6EA4] transition disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {loading ? "Please wait..." : "Login"}
+            {loading ? (
+              <div className="w-full flex items-center justify-center">
+                <p className="animate-spin text-white">
+                  <TbLoader3 />
+                </p>
+              </div>
+            ) : (
+              "Login"
+            )}
           </button>
         </form>
 
         <p className="text-center text-sm mt-4">
           Don’t have an account?{" "}
-          <Link href="/signup" className="text-[#154D71] font-semibold hover:underline">
+          <Link
+            href="/signup"
+            className="text-[#154D71] font-semibold hover:underline"
+          >
             Sign Up
           </Link>
         </p>
+        {errorMessage === "Password not matched" && (
+          <p className="mt-4 text-center text-sm text-gray-600">
+            Forgot your password?{" "}
+            <Link
+              href="/forgot-password"
+              className="text-[#154D71] font-medium hover:text-[#1C6EA4] hover:underline transition"
+            >
+              Reset here
+            </Link>
+          </p>
+        )}
+
+        {errorMessage === "Email is not verified" && (
+          <p className="mt-4 text-center text-sm text-gray-600">
+            Your email is not verified.{" "}
+            <button
+              type="button"
+              onClick={handleResendOtp}
+              className="text-[#154D71] font-medium hover:text-[#1C6EA4] hover:underline transition"
+            >
+              Resend verification email
+            </button>
+          </p>
+        )}
+
+        {/* <p className="mt-4 text-center text-sm text-gray-600">
+            <button
+              type="button"
+              onClick={handleResendOtp}
+              className="text-[#154D71] cursor-pointer font-medium hover:text-[#1C6EA4] hover:underline transition"
+            >
+              Resend verification email
+            </button>
+          </p> */}
       </div>
     </div>
   );

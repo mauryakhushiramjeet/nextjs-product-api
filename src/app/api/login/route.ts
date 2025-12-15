@@ -27,6 +27,12 @@ export async function POST(req: NextRequest) {
         message: "Password not matched",
       });
     }
+    if (!user.isVerified) {
+      return NextResponse.json({
+        success: false,
+        message: "Email is not verified",
+      });
+    }
     const token = await createToken(user._id, user.role);
 
     const response = NextResponse.json({
@@ -41,14 +47,14 @@ export async function POST(req: NextRequest) {
       token,
     });
     response.cookies.set({
-  name: "token",
-  value: token,
-  maxAge: 2 * 24 * 60 * 60,
-  // httpOnly: false,
-  // path: "/",           
-  // sameSite: "none",   
-  // secure: true,       
-});
+      name: "token",
+      value: token,
+      maxAge: 2 * 24 * 60 * 60,
+      // httpOnly: false,
+      // path: "/",
+      // sameSite: "none",
+      // secure: true,
+    });
 
     return response;
   } catch (error: unknown) {
